@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Course Curriculum — Future Stack Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f5f2ea;
+    --accent: #ff4d1c;
+    --electric: #00e5ff;
+    --gold: #f5c842;
+    --muted: #6b6b7a;
+    --border: #e2ddd4;
+    --card: #ffffff;
+    --tag-bg: #edeae0;
+
+    --m1: #ff4d1c;
+    --m2: #f5c842;
+    --m3: #9b5cf6;
+    --m4: #00e5ff;
+    --m5: #22c55e;
+    --m6: #f97316;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(245,242,234,0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.05rem; letter-spacing: -0.02em;
+    text-decoration: none; color: var(--ink);
+    display: flex; align-items: center; gap: 0.45rem;
+  }
+  .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+  .nav-links a { font-size: 0.87rem; font-weight: 500; text-decoration: none; color: var(--muted); transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+  .nav-links a.active { font-weight: 700; }
+  .nav-cta {
+    background: var(--ink); color: var(--paper);
+    padding: 0.52rem 1.25rem; border-radius: 100px;
+    font-size: 0.84rem; font-weight: 600; text-decoration: none;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--accent); }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    padding: 9rem 6rem 5rem;
+    display: grid; grid-template-columns: 1fr 420px;
+    gap: 4rem; align-items: end;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .page-header::before {
+    content: 'CURRICULUM';
+    position: absolute; right: -20px; top: 60px;
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 9rem; color: rgba(0,0,0,0.04);
+    letter-spacing: -0.05em; pointer-events: none;
+    white-space: nowrap;
+  }
+  .page-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .page-eyebrow::before { content: ''; width: 20px; height: 2px; background: var(--accent); }
+  .page-h1 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2.4rem, 4vw, 4rem);
+    letter-spacing: -0.04em; line-height: 1;
+    margin-bottom: 1.2rem;
+  }
+  .page-h1 em { font-style: normal; color: var(--accent); }
+  .page-desc { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 480px; }
+
+  /* ── PROGRESS OVERVIEW ── */
+  .progress-panel {
+    background: var(--ink); border-radius: 20px;
+    padding: 2rem; color: var(--paper);
+  }
+  .progress-panel h3 {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem;
+    color: rgba(245,242,234,0.5); text-transform: uppercase;
+    letter-spacing: 0.1em; margin-bottom: 1.5rem;
+  }
+  .progress-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+  .p-stat { background: rgba(255,255,255,0.06); border-radius: 12px; padding: 1rem; }
+  .p-stat-num {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.8rem; letter-spacing: -0.03em;
+    color: var(--paper); line-height: 1;
+  }
+  .p-stat-label { font-size: 0.75rem; color: rgba(245,242,234,0.45); margin-top: 0.25rem; }
+  .overall-bar { margin-top: 0.5rem; }
+  .overall-bar-label {
+    display: flex; justify-content: space-between;
+    font-size: 0.78rem; color: rgba(245,242,234,0.5);
+    margin-bottom: 0.5rem;
+  }
+  .bar-track {
+    height: 6px; background: rgba(255,255,255,0.1);
+    border-radius: 10px; overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%; border-radius: 10px;
+    background: linear-gradient(90deg, var(--accent), var(--electric));
+    transition: width 1s ease;
+  }
+  .module-dots { display: flex; gap: 0.4rem; margin-top: 1rem; flex-wrap: wrap; }
+  .mod-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    opacity: 0.3;
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    padding: 1.5rem 6rem;
+    display: flex; align-items: center; gap: 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--paper); position: sticky; top: 65px; z-index: 50;
+    flex-wrap: wrap;
+  }
+  .filter-label { font-family: 'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; margin-right: 0.5rem; }
+  .filter-btn {
+    padding: 0.42rem 1rem; border-radius: 100px;
+    font-size: 0.8rem; font-weight: 500; cursor: pointer;
+    border: 1.5px solid var(--border); background: transparent;
+    color: var(--muted); transition: all 0.18s; white-space: nowrap;
+  }
+  .filter-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .filter-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .filter-count {
+    margin-left: auto;
+    font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--muted);
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .curriculum-body {
+    display: grid; grid-template-columns: 280px 1fr;
+    min-height: calc(100vh - 65px);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 2.5rem 1.5rem;
+    position: sticky; top: 120px;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+  .sidebar-title {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1.2rem;
+  }
+  .sidebar-module {
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.7rem 0.9rem; border-radius: 10px;
+    cursor: pointer; margin-bottom: 0.3rem;
+    transition: background 0.15s; text-decoration: none;
+  }
+  .sidebar-module:hover { background: rgba(0,0,0,0.04); }
+  .sidebar-module.active { background: var(--ink); }
+  .mod-color {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .sidebar-module-name {
+    font-size: 0.83rem; font-weight: 500; color: var(--ink); line-height: 1.3;
+  }
+  .sidebar-module.active .sidebar-module-name { color: var(--paper); }
+  .sidebar-module-count {
+    margin-left: auto; font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; color: var(--muted);
+  }
+  .sidebar-module.active .sidebar-module-count { color: rgba(245,242,234,0.4); }
+  .sidebar-divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+  .sidebar-meta { font-size: 0.78rem; color: var(--muted); line-height: 1.6; padding: 0 0.4rem; }
+  .sidebar-meta strong { color: var(--ink); display: block; margin-bottom: 0.2rem; font-weight: 600; }
+
+  /* ── MODULE SECTIONS ── */
+  .modules-area { padding: 3rem 4rem 6rem; }
+
+  .module-section { margin-bottom: 3rem; }
+
+  .module-header {
+    display: flex; align-items: flex-start; gap: 1.5rem;
+    padding: 2rem; border-radius: 18px;
+    margin-bottom: 1rem; cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .module-header:hover { transform: translateX(4px); }
+  .module-header::before {
+    content: ''; position: absolute; inset: 0;
+    opacity: 0.06; pointer-events: none;
+  }
+
+  .mod-num-badge {
+    font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.3rem 0.7rem; border-radius: 6px;
+    background: rgba(0,0,0,0.08); color: rgba(0,0,0,0.5);
+    flex-shrink: 0; align-self: flex-start; margin-top: 2px;
+  }
+  .module-header-info { flex: 1; }
+  .module-header-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.35rem; letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+  }
+  .module-header-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.6; max-width: 540px; }
+  .module-header-meta {
+    display: flex; align-items: center; gap: 1.2rem; margin-top: 0.9rem; flex-wrap: wrap;
+  }
+  .meta-pill {
+    display: flex; align-items: center; gap: 0.35rem;
+    font-size: 0.75rem; color: var(--muted); font-weight: 500;
+  }
+  .meta-pill svg { width: 13px; height: 13px; }
+  .module-toggle {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1.5px solid rgba(0,0,0,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0; align-self: center;
+    transition: transform 0.25s, background 0.2s;
+    background: rgba(255,255,255,0.7);
+    cursor: pointer;
+  }
+  .module-section.open .module-toggle { transform: rotate(45deg); background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* ── LESSONS LIST ── */
+  .lessons-list {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+    border-radius: 0 0 16px 16px;
+  }
+  .module-section.open .lessons-list { max-height: 3000px; }
+
+  .lesson-item {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s; cursor: pointer;
+    position: relative;
+  }
+  .lesson-item:last-child { border-bottom: none; border-radius: 0 0 14px 14px; }
+  .lesson-item:hover { background: rgba(0,0,0,0.02); }
+
+  .lesson-num {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    color: var(--muted); min-width: 28px; text-align: right;
+    flex-shrink: 0;
+  }
+  .lesson-icon {
+    width: 34px; height: 34px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; flex-shrink: 0;
+    background: var(--tag-bg);
+  }
+  .lesson-info { flex: 1; min-width: 0; }
+  .lesson-title {
+    font-size: 0.9rem; font-weight: 500; color: var(--ink);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-bottom: 0.15rem;
+  }
+  .lesson-sub { font-size: 0.75rem; color: var(--muted); }
+  .lesson-right { display: flex; align-items: center; gap: 0.8rem; flex-shrink: 0; }
+  .lesson-duration {
+    font-family: 'Space Mono', monospace; font-size: 0.68rem; color: var(--muted);
+  }
+  .lesson-type {
+    font-size: 0.68rem; padding: 0.2rem 0.55rem; border-radius: 4px;
+    font-weight: 600; letter-spacing: 0.04em;
+  }
+  .lt-video { background: rgba(255,77,28,0.1); color: var(--accent); }
+  .lt-project { background: rgba(245,200,66,0.15); color: #a07800; }
+  .lt-quiz { background: rgba(0,229,255,0.12); color: #0099b0; }
+  .lt-reading { background: rgba(155,92,246,0.1); color: #7c3aed; }
+  .lt-workshop { background: rgba(34,197,94,0.1); color: #16a34a; }
+
+  /* module color themes */
+  .mh-1 { background: rgba(255,77,28,0.07); }
+  .mh-2 { background: rgba(245,200,66,0.1); }
+  .mh-3 { background: rgba(155,92,246,0.07); }
+  .mh-4 { background: rgba(0,229,255,0.07); }
+  .mh-5 { background: rgba(34,197,94,0.07); }
+  .mh-6 { background: rgba(249,115,22,0.07); }
+
+  .mc-1 { background: var(--m1); }
+  .mc-2 { background: var(--m2); }
+  .mc-3 { background: var(--m3); }
+  .mc-4 { background: var(--m4); }
+  .mc-5 { background: var(--m5); }
+  .mc-6 { background: var(--m6); }
+
+  /* ── MODULE COMPLETION BAR ── */
+  .module-progress-bar {
+    height: 3px; border-radius: 0 0 0 0;
+    background: var(--border); margin-bottom: 0;
+    overflow: hidden;
+  }
+  .module-progress-fill {
+    height: 100%; border-radius: 2px;
+    transition: width 0.8s ease;
+  }
+
+  /* ── LESSON CARD WRAPPER ── */
+  .lessons-wrapper {
+    border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 16px 16px;
+    overflow: hidden;
+    background: var(--card);
+  }
+
+  /* ── PROJECT CALLOUT ── */
+  .project-callout {
+    margin: 0.5rem 1.5rem 1.5rem;
+    background: var(--ink); border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .project-callout-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .project-callout-text h4 {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem;
+    color: var(--paper); margin-bottom: 0.2rem;
+  }
+  .project-callout-text p { font-size: 0.78rem; color: rgba(245,242,234,0.5); line-height: 1.4; }
+  .project-callout-badge {
+    margin-left: auto; background: var(--accent);
+    color: white; font-size: 0.68rem; font-weight: 700;
+    padding: 0.3rem 0.7rem; border-radius: 6px; flex-shrink: 0;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+
+  /* ── ENROLL BANNER ── */
+  .enroll-banner {
+    background: var(--accent); padding: 3rem 6rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .enroll-banner h2 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 2rem; letter-spacing: -0.03em; color: white;
+  }
+  .enroll-banner p { color: rgba(255,255,255,0.75); font-size: 0.95rem; margin-top: 0.4rem; }
+  .enroll-btn {
+    background: white; color: var(--accent);
+    padding: 0.9rem 2.2rem; border-radius: 100px;
+    font-weight: 700; font-size: 0.95rem; text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s; white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .enroll-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink); color: rgba(245,242,234,0.45);
+    padding: 2.5rem 6rem;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    font-size: 0.8rem;
+  }
+  footer .logo { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--paper); }
+  footer a { color: rgba(245,242,234,0.45); text-decoration: none; margin-left: 1.2rem; }
+  footer a:hover { color: var(--electric); }
+
+  @media (max-width: 1024px) {
+    .page-header { grid-template-columns: 1fr; padding: 8rem 2rem 3rem; }
+    .curriculum-body { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .modules-area { padding: 2rem 1.5rem 5rem; }
+    .filter-bar { padding: 1rem 1.5rem; }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .enroll-banner { padding: 2.5rem 2rem; }
+    footer { padding: 2rem; flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="future-stack-academy.html">
+    <span class="nav-dot"></span> Future Stack Academy
+  </a>
+  <ul class="nav-links">
+    <li><a href="future-stack-academy.html#curriculum">Curriculum</a></li>
+    <li><a href="lessons.html" class="active">Lessons</a></li>
+    <li><a href="future-stack-academy.html#ai-tools">AI Tools</a></li>
+    <li><a href="future-stack-academy.html#instructors">Instructors</a></li>
+    <li><a href="future-stack-academy.html#pricing">Pricing</a></li>
+  </ul>
+  <a class="nav-cta" href="future-stack-academy.html#pricing">Enroll Now →</a>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow">Full Course Breakdown</div>
+    <h1 class="page-h1">Every lesson.<br/><em>Every tool.</em><br/>Every project.</h1>
+    <p class="page-desc">120+ lessons across 6 modules. Explore the full curriculum below — click any module to expand its complete lesson list, project brief, and learning outcomes.</p>
+  </div>
+  <div class="progress-panel">
+    <h3>Course Overview</h3>
+    <div class="progress-stats">
+      <div class="p-stat">
+        <div class="p-stat-num">120+</div>
+        <div class="p-stat-label">Total Lessons</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-num">6</div>
+        <div class="p-stat-label">Modules</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-num">18</div>
+        <div class="p-stat-label">AI Tools</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-num">~40hrs</div>
+        <div class="p-stat-label">Total Content</div>
+      </div>
+    </div>
+    <div class="overall-bar">
+      <div class="overall-bar-label"><span>Course Completion</span><span>Self-paced</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-dots" id="modDots"></div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <span class="filter-label">Filter</span>
+  <button class="filter-btn active" onclick="filterLessons('all', this)">All Lessons</button>
+  <button class="filter-btn" onclick="filterLessons('video', this)">📹 Videos</button>
+  <button class="filter-btn" onclick="filterLessons('project', this)">🛠️ Projects</button>
+  <button class="filter-btn" onclick="filterLessons('quiz', this)">✅ Quizzes</button>
+  <button class="filter-btn" onclick="filterLessons('workshop', this)">🎯 Workshops</button>
+  <button class="filter-btn" onclick="filterLessons('reading', this)">📖 Reading</button>
+  <span class="filter-count" id="filterCount">Showing all 124 lessons</span>
+</div>
+
+<!-- MAIN BODY -->
+<div class="curriculum-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Jump to Module</div>
+    <a class="sidebar-module active" href="#module1" onclick="setActive(this)">
+      <span class="mod-color mc-1"></span>
+      <span class="sidebar-module-name">Design Fundamentals</span>
+      <span class="sidebar-module-count">22</span>
+    </a>
+    <a class="sidebar-module" href="#module2" onclick="setActive(this)">
+      <span class="mod-color mc-2"></span>
+      <span class="sidebar-module-name">Typography Mastery</span>
+      <span class="sidebar-module-count">18</span>
+    </a>
+    <a class="sidebar-module" href="#module3" onclick="setActive(this)">
+      <span class="mod-color mc-3"></span>
+      <span class="sidebar-module-name">Brand Identity</span>
+      <span class="sidebar-module-count">20</span>
+    </a>
+    <a class="sidebar-module" href="#module4" onclick="setActive(this)">
+      <span class="mod-color mc-4"></span>
+      <span class="sidebar-module-name">AI Tools</span>
+      <span class="sidebar-module-count">28</span>
+    </a>
+    <a class="sidebar-module" href="#module5" onclick="setActive(this)">
+      <span class="mod-color mc-5"></span>
+      <span class="sidebar-module-name">Digital & UI Design</span>
+      <span class="sidebar-module-count">22</span>
+    </a>
+    <a class="sidebar-module" href="#module6" onclick="setActive(this)">
+      <span class="mod-color mc-6"></span>
+      <span class="sidebar-module-name">Freelance & Career</span>
+      <span class="sidebar-module-count">14</span>
+    </a>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-meta">
+      <strong>🎓 Certificate</strong>Awarded on completion of all 6 modules and projects.
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-meta">
+      <strong>🔄 Updated</strong>AI modules reviewed and refreshed every quarter.
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-meta">
+      <strong>⏱️ Self-Paced</strong>Study on your own schedule. Lifetime access included.
+    </div>
+  </aside>
+
+  <!-- MODULES AREA -->
+  <main class="modules-area">
+
+    <!-- ── MODULE 1 ── -->
+    <div class="module-section open" id="module1">
+      <div class="module-header mh-1" onclick="toggleModule(this.parentElement)">
+        <span class="mod-num-badge">Module 01</span>
+        <div class="module-header-info">
+          <div class="module-header-title">Design Fundamentals</div>
+          <div class="module-header-desc">The visual grammar behind every great design. Master the principles that govern all effective visual communication — knowledge that never expires.</div>
+          <div class="module-header-meta">
+            <span class="meta-pill">📹 16 videos</span>
+            <span class="meta-pill">✅ 3 quizzes</span>
+            <span class="meta-pill">🛠️ 1 project</span>
+            <span class="meta-pill">⏱️ ~6 hrs</span>
+          </div>
+        </div>
+        <div class="module-toggle">+</div>
+      </div>
+      <div class="module-progress-bar"><div class="module-progress-fill" style="background:var(--m1); width:100%"></div></div>
+      <div class="lessons-list">
+        <div class="lessons-wrapper">
+          <div class="lesson-item" data-type="video"><span class="lesson-num">01</span><div class="lesson-icon">🎬</div><div class="lesson-info"><div class="lesson-title">Welcome to Future Stack Academy</div><div class="lesson-sub">Introduction · Course overview · How to learn here</div></div><div class="lesson-right"><span class="lesson-duration">8 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">02</span><div class="lesson-icon">🎨</div><div class="lesson-info"><div class="lesson-title">What is Graphic Design?</div><div class="lesson-sub">Definition · History · Why it matters in the AI era</div></div><div class="lesson-right"><span class="lesson-duration">14 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">03</span><div class="lesson-icon">🌈</div><div class="lesson-info"><div class="lesson-title">Color Theory — The Full System</div><div class="lesson-sub">Hue, saturation, value · Color wheels · Harmony types</div></div><div class="lesson-right"><span class="lesson-duration">22 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">04</span><div class="lesson-icon">🧠</div><div class="lesson-info"><div class="lesson-title">Color Psychology in Design</div><div class="lesson-sub">Emotional associations · Cultural context · Brand color decisions</div></div><div class="lesson-right"><span class="lesson-duration">18 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="reading"><span class="lesson-num">05</span><div class="lesson-icon">📖</div><div class="lesson-info"><div class="lesson-title">Building a Color Palette — Reference Guide</div><div class="lesson-sub">PDF resource · Swatches · Accessibility contrast checklist</div></div><div class="lesson-right"><span class="lesson-duration">10 min</span><span class="lesson-type lt-reading">READING</span></div></div>
+          <div class="lesson-item" data-type="quiz"><span class="lesson-num">06</span><div class="lesson-icon">✅</div><div class="lesson-info"><div class="lesson-title">Quiz — Color Theory</div><div class="lesson-sub">12 questions · Instant feedback · Retake anytime</div></div><div class="lesson-right"><span class="lesson-duration">15 min</span><span class="lesson-type lt-quiz">QUIZ</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">07</span><div class="lesson-icon">📐</div><div class="lesson-info"><div class="lesson-title">Composition Principles</div><div class="lesson-sub">Rule of thirds · Balance · Visual flow · Proximity</div></div><div class="lesson-right"><span class="lesson-duration">20 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">08</span><div class="lesson-icon">⬜</div><div class="lesson-info"><div class="lesson-title">White Space is Not Empty Space</div><div class="lesson-sub">Negative space · Breathing room · Luxury vs clutter</div></div><div class="lesson-right"><span class="lesson-duration">12 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">09</span><div class="lesson-icon">🔲</div><div class="lesson-info"><div class="lesson-title">Grid Systems Explained</div><div class="lesson-sub">Column grids · Modular grids · Baseline grids · When to break them</div></div><div class="lesson-right"><span class="lesson-duration">24 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">10</span><div class="lesson-icon">👁️</div><div class="lesson-info"><div class="lesson-title">Gestalt Principles for Designers</div><div class="lesson-sub">Proximity · Similarity · Closure · Figure-Ground · Continuity</div></div><div class="lesson-right"><span class="lesson-duration">19 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">11</span><div class="lesson-icon">🏆</div><div class="lesson-info"><div class="lesson-title">Visual Hierarchy — Directing the Eye</div><div class="lesson-sub">Size · Contrast · Weight · Position · Directing attention</div></div><div class="lesson-right"><span class="lesson-duration">17 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="quiz"><span class="lesson-num">12</span><div class="lesson-icon">✅</div><div class="lesson-info"><div class="lesson-title">Quiz — Layout & Composition</div><div class="lesson-sub">10 questions · Visual examples · Scenario-based</div></div><div class="lesson-right"><span class="lesson-duration">12 min</span><span class="lesson-type lt-quiz">QUIZ</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">13</span><div class="lesson-icon">🖼️</div><div class="lesson-info"><div class="lesson-title">Designing with Contrast</div><div class="lesson-sub">Tonal contrast · Color contrast · Size contrast · Style contrast</div></div><div class="lesson-right"><span class="lesson-duration">15 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">14</span><div class="lesson-icon">📏</div><div class="lesson-info"><div class="lesson-title">Alignment, Repetition & Rhythm</div><div class="lesson-sub">The four principles of CRAP · Real examples deconstructed</div></div><div class="lesson-right"><span class="lesson-duration">16 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">15</span><div class="lesson-icon">🔍</div><div class="lesson-info"><div class="lesson-title">Analysing Great Design — Deconstruction Lab</div><div class="lesson-sub">5 iconic designs broken down principle by principle</div></div><div class="lesson-right"><span class="lesson-duration">28 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="quiz"><span class="lesson-num">16</span><div class="lesson-icon">✅</div><div class="lesson-info"><div class="lesson-title">Quiz — Gestalt & Visual Hierarchy</div><div class="lesson-sub">Spot-the-principle format · 15 questions</div></div><div class="lesson-right"><span class="lesson-duration">15 min</span><span class="lesson-type lt-quiz">QUIZ</span></div></div>
+          <div class="lesson-item" data-type="reading"><span class="lesson-num">17</span><div class="lesson-icon">📖</div><div class="lesson-info"><div class="lesson-title">Fundamentals Reference Workbook</div><div class="lesson-sub">Printable summary · Exercises · Checklists for every principle</div></div><div class="lesson-right"><span class="lesson-duration">20 min</span><span class="lesson-type lt-reading">READING</span></div></div>
+          <div class="project-callout">
+            <div class="project-callout-icon">🛠️</div>
+            <div class="project-callout-text">
+              <h4>Module 01 Project — Brand Mood Board</h4>
+              <p>Apply every principle from this module to create a professional mood board for a fictional brand. This is your first portfolio piece.</p>
+            </div>
+            <div class="project-callout-badge">Portfolio</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MODULE 2 ── -->
+    <div class="module-section" id="module2">
+      <div class="module-header mh-2" onclick="toggleModule(this.parentElement)">
+        <span class="mod-num-badge">Module 02</span>
+        <div class="module-header-info">
+          <div class="module-header-title">Typography Mastery</div>
+          <div class="module-header-desc">Fonts are voices. Learn to choose, pair, and set type with confidence across every context — print, screen, branding, and editorial.</div>
+          <div class="module-header-meta">
+            <span class="meta-pill">📹 13 videos</span>
+            <span class="meta-pill">✅ 2 quizzes</span>
+            <span class="meta-pill">🎯 1 workshop</span>
+            <span class="meta-pill">⏱️ ~5.5 hrs</span>
+          </div>
+        </div>
+        <div class="module-toggle">+</div>
+      </div>
+      <div class="module-progress-bar"><div class="module-progress-fill" style="background:var(--m2); width:100%"></div></div>
+      <div class="lessons-list">
+        <div class="lessons-wrapper">
+          <div class="lesson-item" data-type="video"><span class="lesson-num">01</span><div class="lesson-icon">🔤</div><div class="lesson-info"><div class="lesson-title">Type Anatomy — Speaking the Language</div><div class="lesson-sub">Baseline, ascender, descender, x-height, serif, stem, bowl</div></div><div class="lesson-right"><span class="lesson-duration">14 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">02</span><div class="lesson-icon">📚</div><div class="lesson-info"><div class="lesson-title">Type Classification — Every Category Explained</div><div class="lesson-sub">Serif · Sans-serif · Display · Monospace · Script · Variable</div></div><div class="lesson-right"><span class="lesson-duration">18 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">03</span><div class="lesson-icon">💞</div><div class="lesson-info"><div class="lesson-title">Font Pairing — The Rules & the Breaks</div><div class="lesson-sub">Contrast pairing · Harmony pairing · 8 proven combinations</div></div><div class="lesson-right"><span class="lesson-duration">22 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">04</span><div class="lesson-icon">📰</div><div class="lesson-info"><div class="lesson-title">Typographic Hierarchy in Practice</div><div class="lesson-sub">H1–H6 thinking · Body copy · Captions · Pull quotes</div></div><div class="lesson-right"><span class="lesson-duration">19 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">05</span><div class="lesson-icon">🔬</div><div class="lesson-info"><div class="lesson-title">Kerning, Tracking, Leading — The Details</div><div class="lesson-sub">Micro-typography · What separates amateur from pro work</div></div><div class="lesson-right"><span class="lesson-duration">15 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="quiz"><span class="lesson-num">06</span><div class="lesson-icon">✅</div><div class="lesson-info"><div class="lesson-title">Quiz — Type Anatomy & Classification</div><div class="lesson-sub">Label-the-diagram format · 14 questions</div></div><div class="lesson-right"><span class="lesson-duration">12 min</span><span class="lesson-type lt-quiz">QUIZ</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">07</span><div class="lesson-icon">📱</div><div class="lesson-info"><div class="lesson-title">Type for Screens — Web & App Typography</div><div class="lesson-sub">Legibility at scale · Responsive type · System fonts vs custom fonts</div></div><div class="lesson-right"><span class="lesson-duration">20 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">08</span><div class="lesson-icon">🖨️</div><div class="lesson-info"><div class="lesson-title">Type for Print — Magazines, Books & Posters</div><div class="lesson-sub">Print-specific considerations · Optical sizing · CMYK type rendering</div></div><div class="lesson-right"><span class="lesson-duration">17 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">09</span><div class="lesson-icon">🏷️</div><div class="lesson-info"><div class="lesson-title">Type as Identity — Brand Typography Systems</div><div class="lesson-sub">Custom typefaces · Brand voice through type · System documentation</div></div><div class="lesson-right"><span class="lesson-duration">23 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">10</span><div class="lesson-icon">🤖</div><div class="lesson-info"><div class="lesson-title">AI Font Tools — Fontjoy, WhatTheFont & More</div><div class="lesson-sub">AI-assisted pairing · Font identification · Variable font generators</div></div><div class="lesson-right"><span class="lesson-duration">16 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="workshop"><span class="lesson-num">11</span><div class="lesson-icon">🎯</div><div class="lesson-info"><div class="lesson-title">Live Workshop — Typography Audit</div><div class="lesson-sub">Analyse & fix 5 real-world type examples · Guided group exercise</div></div><div class="lesson-right"><span class="lesson-duration">45 min</span><span class="lesson-type lt-workshop">WORKSHOP</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">12</span><div class="lesson-icon">✍️</div><div class="lesson-info"><div class="lesson-title">Expressive Typography — Type as Art</div><div class="lesson-sub">Poster lettering · Kinetic type · Breaking the rules with intent</div></div><div class="lesson-right"><span class="lesson-duration">21 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="quiz"><span class="lesson-num">13</span><div class="lesson-icon">✅</div><div class="lesson-info"><div class="lesson-title">Quiz — Hierarchy, Pairing & Spacing</div><div class="lesson-sub">Before/after format · Fix-the-layout questions · 12 questions</div></div><div class="lesson-right"><span class="lesson-duration">15 min</span><span class="lesson-type lt-quiz">QUIZ</span></div></div>
+          <div class="project-callout">
+            <div class="project-callout-icon">🛠️</div>
+            <div class="project-callout-text">
+              <h4>Module 02 Project — Type Specimen Poster</h4>
+              <p>Design a professional type specimen poster showcasing a complete typographic system — hierarchy, weights, pairings, and usage guidelines.</p>
+            </div>
+            <div class="project-callout-badge">Portfolio</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MODULE 3 ── -->
+    <div class="module-section" id="module3">
+      <div class="module-header mh-3" onclick="toggleModule(this.parentElement)">
+        <span class="mod-num-badge">Module 03</span>
+        <div class="module-header-info">
+          <div class="module-header-title">Brand Identity Design</div>
+          <div class="module-header-desc">Build complete brand systems from scratch — the same process used at top-tier design agencies worldwide. Logo to style guide to full rollout.</div>
+          <div class="module-header-meta">
+            <span class="meta-pill">📹 15 videos</span>
+            <span class="meta-pill">✅ 2 quizzes</span>
+            <span class="meta-pill">🛠️ 1 project</span>
+            <span class="meta-pill">⏱️ ~7 hrs</span>
+          </div>
+        </div>
+        <div class="module-toggle">+</div>
+      </div>
+      <div class="module-progress-bar"><div class="module-progress-fill" style="background:var(--m3); width:100%"></div></div>
+      <div class="lessons-list">
+        <div class="lessons-wrapper">
+          <div class="lesson-item" data-type="video"><span class="lesson-num">01</span><div class="lesson-icon">🏢</div><div class="lesson-info"><div class="lesson-title">What is Brand Identity?</div><div class="lesson-sub">Brand vs logo · Identity systems · Why consistency = trust</div></div><div class="lesson-right"><span class="lesson-duration">12 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">02</span><div class="lesson-icon">🔍</div><div class="lesson-info"><div class="lesson-title">Discovery & Research Phase</div><div class="lesson-sub">Brand brief · Audience research · Competitor analysis · Moodboarding</div></div><div class="lesson-right"><span class="lesson-duration">20 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">03</span><div class="lesson-icon">✏️</div><div class="lesson-info"><div class="lesson-title">Logo Design — Concepts & Sketching</div><div class="lesson-sub">Wordmark · Symbol · Monogram · Combination mark · Emblem</div></div><div class="lesson-right"><span class="lesson-duration">25 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">04</span><div class="lesson-icon">🔵</div><div class="lesson-info"><div class="lesson-title">Logo Design in Illustrator — Full Workflow</div><div class="lesson-sub">Vector construction · Pen tool · Shape builder · Refinement</div></div><div class="lesson-right"><span class="lesson-duration">38 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">05</span><div class="lesson-icon">🌈</div><div class="lesson-info"><div class="lesson-title">Building the Brand Color System</div><div class="lesson-sub">Primary, secondary, neutral palettes · Accessible color · Dark mode</div></div><div class="lesson-right"><span class="lesson-duration">19 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">06</span><div class="lesson-icon">🔤</div><div class="lesson-info"><div class="lesson-title">Brand Typography System</div><div class="lesson-sub">Choosing brand fonts · Usage rules · Hierarchy documentation</div></div><div class="lesson-right"><span class="lesson-duration">16 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="quiz"><span class="lesson-num">07</span><div class="lesson-icon">✅</div><div class="lesson-info"><div class="lesson-title">Quiz — Logo Design & Brand Fundamentals</div><div class="lesson-sub">Case study format · Identify what works and what doesn't · 14 questions</div></div><div class="lesson-right"><span class="lesson-duration">15 min</span><span class="lesson-type lt-quiz">QUIZ</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">08</span><div class="lesson-icon">🎭</div><div class="lesson-info"><div class="lesson-title">Visual Language — Shapes, Patterns, Illustration Style</div><div class="lesson-sub">Building a visual vocabulary · Iconography · Brand illustration</div></div><div class="lesson-right"><span class="lesson-duration">22 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">09</span><div class="lesson-icon">📋</div><div class="lesson-info"><div class="lesson-title">Writing a Brand Style Guide</div><div class="lesson-sub">Structure · Do/don't pages · Logo usage rules · Downloadable template</div></div><div class="lesson-right"><span class="lesson-duration">24 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">10</span><div class="lesson-icon">💼</div><div class="lesson-info"><div class="lesson-title">Applying the Brand — Business Card, Letterhead</div><div class="lesson-sub">Print stationery system · Grid layouts · Bleed and trim setup</div></div><div class="lesson-right"><span class="lesson-duration">28 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">11</span><div class="lesson-icon">📱</div><div class="lesson-info"><div class="lesson-title">Applying the Brand — Digital & Social</div><div class="lesson-sub">Social profile assets · Email headers · Digital ad templates</div></div><div class="lesson-right"><span class="lesson-duration">20 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">12</span><div class="lesson-icon">🤖</div><div class="lesson-info"><div class="lesson-title">AI-Assisted Branding — Looka, Brandmark & Firefly</div><div class="lesson-sub">Using AI for concept generation · Refining AI output · What AI can't replace</div></div><div class="lesson-right"><span class="lesson-duration">21 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">13</span><div class="lesson-icon">🎤</div><div class="lesson-info"><div class="lesson-title">Presenting Brand Work to Clients</div><div class="lesson-sub">Mockups · Presentation decks · Framing your decisions</div></div><div class="lesson-right"><span class="lesson-duration">18 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="quiz"><span class="lesson-num">14</span><div class="lesson-icon">✅</div><div class="lesson-info"><div class="lesson-title">Quiz — Brand Systems & Style Guides</div><div class="lesson-sub">Real brand teardowns · 12 questions</div></div><div class="lesson-right"><span class="lesson-duration">14 min</span><span class="lesson-type lt-quiz">QUIZ</span></div></div>
+          <div class="project-callout">
+            <div class="project-callout-icon">🛠️</div>
+            <div class="project-callout-text">
+              <h4>Module 03 Project — Full Brand Identity System</h4>
+              <p>Design a complete brand identity for a fictional business — logo, color palette, typography, style guide, and 3 brand applications. Your biggest portfolio piece yet.</p>
+            </div>
+            <div class="project-callout-badge">Portfolio</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MODULE 4 ── -->
+    <div class="module-section" id="module4">
+      <div class="module-header mh-4" onclick="toggleModule(this.parentElement)">
+        <span class="mod-num-badge">Module 04</span>
+        <div class="module-header-info">
+          <div class="module-header-title">AI Tools for Designers</div>
+          <div class="module-header-desc">The core AI module. Deep dives into 18 AI tools with practical, real-world exercises. You'll leave this module as a genuinely AI-fluent designer.</div>
+          <div class="module-header-meta">
+            <span class="meta-pill">📹 20 videos</span>
+            <span class="meta-pill">🎯 3 workshops</span>
+            <span class="meta-pill">🛠️ 1 project</span>
+            <span class="meta-pill">⏱️ ~9 hrs</span>
+          </div>
+        </div>
+        <div class="module-toggle">+</div>
+      </div>
+      <div class="module-progress-bar"><div class="module-progress-fill" style="background:var(--m4); width:100%"></div></div>
+      <div class="lessons-list">
+        <div class="lessons-wrapper">
+          <div class="lesson-item" data-type="video"><span class="lesson-num">01</span><div class="lesson-icon">🌐</div><div class="lesson-info"><div class="lesson-title">The AI Design Landscape in 2026</div><div class="lesson-sub">State of the tools · What's real vs hype · Designer's role in AI workflows</div></div><div class="lesson-right"><span class="lesson-duration">15 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">02</span><div class="lesson-icon">✍️</div><div class="lesson-info"><div class="lesson-title">Prompt Engineering Fundamentals</div><div class="lesson-sub">Anatomy of a great prompt · Style language · Medium descriptors</div></div><div class="lesson-right"><span class="lesson-duration">24 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">03</span><div class="lesson-icon">🎨</div><div class="lesson-info"><div class="lesson-title">Midjourney Masterclass — Part 1</div><div class="lesson-sub">Setup · Basic prompts · Parameters — aspect ratio, quality, version</div></div><div class="lesson-right"><span class="lesson-duration">32 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">04</span><div class="lesson-icon">🎨</div><div class="lesson-info"><div class="lesson-title">Midjourney Masterclass — Part 2</div><div class="lesson-sub">Style consistency · Image prompting · Inpainting · Commercial output</div></div><div class="lesson-right"><span class="lesson-duration">35 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="workshop"><span class="lesson-num">05</span><div class="lesson-icon">🎯</div><div class="lesson-info"><div class="lesson-title">Workshop — Build a Midjourney Prompt Library</div><div class="lesson-sub">Create 20 reusable prompts for branding, editorial, and social work</div></div><div class="lesson-right"><span class="lesson-duration">60 min</span><span class="lesson-type lt-workshop">WORKSHOP</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">06</span><div class="lesson-icon">🔥</div><div class="lesson-info"><div class="lesson-title">Adobe Firefly — Generative Fill in Photoshop</div><div class="lesson-sub">Full walkthrough · Background generation · Object replacement · Extend image</div></div><div class="lesson-right"><span class="lesson-duration">28 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">07</span><div class="lesson-icon">🔥</div><div class="lesson-info"><div class="lesson-title">Adobe Firefly — Text-to-Vector in Illustrator</div><div class="lesson-sub">Generate Similar · Generative Shape Fill · AI-assisted vector creation</div></div><div class="lesson-right"><span class="lesson-duration">22 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">08</span><div class="lesson-icon">🧠</div><div class="lesson-info"><div class="lesson-title">Figma AI — Prompt-to-Design Workflows</div><div class="lesson-sub">AI layout generation · Smart components · Auto-naming · Figma AI assistant</div></div><div class="lesson-right"><span class="lesson-duration">26 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">09</span><div class="lesson-icon">🌿</div><div class="lesson-info"><div class="lesson-title">Canva AI Suite — Full Walkthrough</div><div class="lesson-sub">Magic Resize · Text-to-Image · Magic Write · Background Remover · Batch</div></div><div class="lesson-right"><span class="lesson-duration">30 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">10</span><div class="lesson-icon">✨</div><div class="lesson-info"><div class="lesson-title">DALL·E 3 for Design Work</div><div class="lesson-sub">Prompt adherence · Concept generation · Client mockups via ChatGPT</div></div><div class="lesson-right"><span class="lesson-duration">18 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">11</span><div class="lesson-icon">⚡</div><div class="lesson-info"><div class="lesson-title">Stable Diffusion — Setup & Core Workflow</div><div class="lesson-sub">Installation · Model selection · txt2img · img2img · Sampling methods</div></div><div class="lesson-right"><span class="lesson-duration">40 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">12</span><div class="lesson-icon">🎛️</div><div class="lesson-info"><div class="lesson-title">ControlNet — Precision AI Image Control</div><div class="lesson-sub">Pose control · Edge detection · Depth mapping · Design-accurate generation</div></div><div class="lesson-right"><span class="lesson-duration">35 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="workshop"><span class="lesson-num">13</span><div class="lesson-icon">🎯</div><div class="lesson-info"><div class="lesson-title">Workshop — AI Image to Final Design Asset</div><div class="lesson-sub">Take AI output from raw generation to polished, print-ready design</div></div><div class="lesson-right"><span class="lesson-duration">75 min</span><span class="lesson-type lt-workshop">WORKSHOP</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">14</span><div class="lesson-icon">✂️</div><div class="lesson-info"><div class="lesson-title">Remove.bg, Clipdrop & AI Cutout Tools</div><div class="lesson-sub">Background removal · Object isolation · AI upscaling · Relighting</div></div><div class="lesson-right"><span class="lesson-duration">14 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">15</span><div class="lesson-icon">🎬</div><div class="lesson-info"><div class="lesson-title">Runway ML — AI Video for Designers</div><div class="lesson-sub">Image-to-video · Motion brush · AI green screen · Social content creation</div></div><div class="lesson-right"><span class="lesson-duration">24 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">16</span><div class="lesson-icon">🎨</div><div class="lesson-info"><div class="lesson-title">Ideogram — Typography-Accurate AI Images</div><div class="lesson-sub">Text-in-image generation · Poster creation · Thumbnail design</div></div><div class="lesson-right"><span class="lesson-duration">16 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">17</span><div class="lesson-icon">🌈</div><div class="lesson-info"><div class="lesson-title">Khroma & AI Color Tools</div><div class="lesson-sub">Train your personal color AI · Generate palettes · Export to design tools</div></div><div class="lesson-right"><span class="lesson-duration">12 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">18</span><div class="lesson-icon">⚖️</div><div class="lesson-info"><div class="lesson-title">Ethics, Copyright & Responsible AI Use</div><div class="lesson-sub">Commercial licensing · Attribution · What to disclose to clients</div></div><div class="lesson-right"><span class="lesson-duration">18 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">19</span><div class="lesson-icon">🔄</div><div class="lesson-info"><div class="lesson-title">Building Your Full AI Design Workflow</div><div class="lesson-sub">Connecting all tools into a repeatable, client-ready production system</div></div><div class="lesson-right"><span class="lesson-duration">27 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="workshop"><span class="lesson-num">20</span><div class="lesson-icon">🎯</div><div class="lesson-info"><div class="lesson-title">Workshop — Full AI Brand Campaign Sprint</div><div class="lesson-sub">Use AI tools to produce a 5-asset brand campaign in under 2 hours</div></div><div class="lesson-right"><span class="lesson-duration">90 min</span><span class="lesson-type lt-workshop">WORKSHOP</span></div></div>
+          <div class="project-callout">
+            <div class="project-callout-icon">🛠️</div>
+            <div class="project-callout-text">
+              <h4>Module 04 Project — AI-Powered Campaign</h4>
+              <p>Produce a complete 5-piece visual campaign using at least 3 different AI tools. Document your workflow and prompt decisions alongside the final deliverables.</p>
+            </div>
+            <div class="project-callout-badge">Portfolio</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MODULE 5 ── -->
+    <div class="module-section" id="module5">
+      <div class="module-header mh-5" onclick="toggleModule(this.parentElement)">
+        <span class="mod-num-badge">Module 05</span>
+        <div class="module-header-info">
+          <div class="module-header-title">Digital & UI Design</div>
+          <div class="module-header-desc">Design for screens — social media, web, apps, and digital campaigns. Master the principles that make digital design win in the scroll-speed era.</div>
+          <div class="module-header-meta">
+            <span class="meta-pill">📹 16 videos</span>
+            <span class="meta-pill">✅ 2 quizzes</span>
+            <span class="meta-pill">🛠️ 1 project</span>
+            <span class="meta-pill">⏱️ ~7 hrs</span>
+          </div>
+        </div>
+        <div class="module-toggle">+</div>
+      </div>
+      <div class="module-progress-bar"><div class="module-progress-fill" style="background:var(--m5); width:100%"></div></div>
+      <div class="lessons-list">
+        <div class="lessons-wrapper">
+          <div class="lesson-item" data-type="video"><span class="lesson-num">01</span><div class="lesson-icon">📱</div><div class="lesson-info"><div class="lesson-title">UX vs UI — What Designers Need to Know</div><div class="lesson-sub">The distinction · How they overlap · Where graphic designers fit in</div></div><div class="lesson-right"><span class="lesson-duration">15 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">02</span><div class="lesson-icon">🔲</div><div class="lesson-info"><div class="lesson-title">Figma Foundations — Interface & Core Tools</div><div class="lesson-sub">Frames · Auto layout · Components · Variants · Styles</div></div><div class="lesson-right"><span class="lesson-duration">30 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">03</span><div class="lesson-icon">📐</div><div class="lesson-info"><div class="lesson-title">Wireframing & Information Architecture</div><div class="lesson-sub">Lo-fi wireframes · Content hierarchy · Navigation patterns</div></div><div class="lesson-right"><span class="lesson-duration">22 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">04</span><div class="lesson-icon">🎨</div><div class="lesson-info"><div class="lesson-title">UI Design Principles — Building Interfaces</div><div class="lesson-sub">Consistency · Affordance · Feedback · Accessibility · 8px grid</div></div><div class="lesson-right"><span class="lesson-duration">25 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">05</span><div class="lesson-icon">🖥️</div><div class="lesson-info"><div class="lesson-title">Designing a Landing Page — Full Figma Walkthrough</div><div class="lesson-sub">Hero · Sections · CTAs · Responsive breakpoints · Developer handoff</div></div><div class="lesson-right"><span class="lesson-duration">45 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">06</span><div class="lesson-icon">📸</div><div class="lesson-info"><div class="lesson-title">Social Media Design — Formats, Specs & Strategy</div><div class="lesson-sub">Instagram, LinkedIn, TikTok, Twitter/X — sizes, ratios, templates</div></div><div class="lesson-right"><span class="lesson-duration">20 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="quiz"><span class="lesson-num">07</span><div class="lesson-icon">✅</div><div class="lesson-info"><div class="lesson-title">Quiz — UI Principles & Design Patterns</div><div class="lesson-sub">Spot the UX problem · Fix the interface · 14 questions</div></div><div class="lesson-right"><span class="lesson-duration">15 min</span><span class="lesson-type lt-quiz">QUIZ</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">08</span><div class="lesson-icon">🎠</div><div class="lesson-info"><div class="lesson-title">Design Systems — Building Component Libraries</div><div class="lesson-sub">Tokens · Component sets · Variants · When to build vs use an existing system</div></div><div class="lesson-right"><span class="lesson-duration">28 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">09</span><div class="lesson-icon">🤖</div><div class="lesson-info"><div class="lesson-title">AI Mockup Tools — Smartmockups & Ls.graphics</div><div class="lesson-sub">Generate client-ready mockups in minutes using AI scene generators</div></div><div class="lesson-right"><span class="lesson-duration">16 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">10</span><div class="lesson-icon">♿</div><div class="lesson-info"><div class="lesson-title">Accessibility in Digital Design</div><div class="lesson-sub">WCAG standards · Color contrast · Screen reader-friendly design</div></div><div class="lesson-right"><span class="lesson-duration">18 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">11</span><div class="lesson-icon">📧</div><div class="lesson-info"><div class="lesson-title">Email Design — Templates & Best Practices</div><div class="lesson-sub">Email anatomy · Mobile-first design · Campaign layout · CTA hierarchy</div></div><div class="lesson-right"><span class="lesson-duration">19 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">12</span><div class="lesson-icon">🎞️</div><div class="lesson-info"><div class="lesson-title">Motion Basics for Static Designers</div><div class="lesson-sub">Micro-animations · GIF and Lottie output · When motion improves UX</div></div><div class="lesson-right"><span class="lesson-duration">22 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="quiz"><span class="lesson-num">13</span><div class="lesson-icon">✅</div><div class="lesson-info"><div class="lesson-title">Quiz — Digital Design & Accessibility</div><div class="lesson-sub">12 questions · Live design critique format</div></div><div class="lesson-right"><span class="lesson-duration">14 min</span><span class="lesson-type lt-quiz">QUIZ</span></div></div>
+          <div class="project-callout">
+            <div class="project-callout-icon">🛠️</div>
+            <div class="project-callout-text">
+              <h4>Module 05 Project — Full App UI Design</h4>
+              <p>Design a complete mobile app UI in Figma — 6 screens, a component library, and a prototype. Present with a device mockup ready for portfolio display.</p>
+            </div>
+            <div class="project-callout-badge">Portfolio</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MODULE 6 ── -->
+    <div class="module-section" id="module6">
+      <div class="module-header mh-6" onclick="toggleModule(this.parentElement)">
+        <span class="mod-num-badge">Module 06</span>
+        <div class="module-header-info">
+          <div class="module-header-title">Freelance & Career Launch</div>
+          <div class="module-header-desc">Turn your skills into income. Build your portfolio, price your work, find clients, and position yourself as an AI-native designer in the market.</div>
+          <div class="module-header-meta">
+            <span class="meta-pill">📹 10 videos</span>
+            <span class="meta-pill">📖 2 resources</span>
+            <span class="meta-pill">🛠️ 1 project</span>
+            <span class="meta-pill">⏱️ ~4 hrs</span>
+          </div>
+        </div>
+        <div class="module-toggle">+</div>
+      </div>
+      <div class="module-progress-bar"><div class="module-progress-fill" style="background:var(--m6); width:100%"></div></div>
+      <div class="lessons-list">
+        <div class="lessons-wrapper">
+          <div class="lesson-item" data-type="video"><span class="lesson-num">01</span><div class="lesson-icon">🗂️</div><div class="lesson-info"><div class="lesson-title">Building a Portfolio That Gets You Hired</div><div class="lesson-sub">Selection · Presentation · Case study format · Behance vs personal site</div></div><div class="lesson-right"><span class="lesson-duration">24 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">02</span><div class="lesson-icon">💰</div><div class="lesson-info"><div class="lesson-title">Pricing Your Work — Rates, Packages & Value</div><div class="lesson-sub">Hourly vs project pricing · Rate setting · What to charge as a beginner</div></div><div class="lesson-right"><span class="lesson-duration">22 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="reading"><span class="lesson-num">03</span><div class="lesson-icon">📖</div><div class="lesson-info"><div class="lesson-title">Freelance Rate Card Template + Client Contract</div><div class="lesson-sub">Downloadable PDF · Customisable pricing doc · Legal contract template</div></div><div class="lesson-right"><span class="lesson-duration">15 min</span><span class="lesson-type lt-reading">READING</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">04</span><div class="lesson-icon">🤝</div><div class="lesson-info"><div class="lesson-title">Finding Your First Clients</div><div class="lesson-sub">Outreach · LinkedIn · Upwork · Referrals · Cold email that works</div></div><div class="lesson-right"><span class="lesson-duration">20 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">05</span><div class="lesson-icon">📣</div><div class="lesson-info"><div class="lesson-title">Marketing Yourself as an AI Designer</div><div class="lesson-sub">Personal brand · Niche positioning · Content strategy · Standing out in 2026</div></div><div class="lesson-right"><span class="lesson-duration">18 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">06</span><div class="lesson-icon">📝</div><div class="lesson-info"><div class="lesson-title">Client Communication & Project Management</div><div class="lesson-sub">Brief templates · Revision policies · Delivering feedback · Scope creep</div></div><div class="lesson-right"><span class="lesson-duration">17 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">07</span><div class="lesson-icon">📈</div><div class="lesson-info"><div class="lesson-title">Scaling — From Freelancer to Studio</div><div class="lesson-sub">Productised services · Retainers · Hiring · Agency model basics</div></div><div class="lesson-right"><span class="lesson-duration">21 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">08</span><div class="lesson-icon">🤖</div><div class="lesson-info"><div class="lesson-title">Selling AI Workflows to Clients</div><div class="lesson-sub">How to pitch AI-augmented services · What to charge extra · Client education</div></div><div class="lesson-right"><span class="lesson-duration">16 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="video"><span class="lesson-num">09</span><div class="lesson-icon">🎓</div><div class="lesson-info"><div class="lesson-title">What Comes After This Course?</div><div class="lesson-sub">Continuing education · Communities · Staying current · Next-level skills</div></div><div class="lesson-right"><span class="lesson-duration">12 min</span><span class="lesson-type lt-video">VIDEO</span></div></div>
+          <div class="lesson-item" data-type="reading"><span class="lesson-num">10</span><div class="lesson-icon">📖</div><div class="lesson-info"><div class="lesson-title">Career Resources Pack — Tools, Communities & Jobs</div><div class="lesson-sub">Curated list of job boards, design communities, newsletters, and learning resources</div></div><div class="lesson-right"><span class="lesson-duration">10 min</span><span class="lesson-type lt-reading">READING</span></div></div>
+          <div class="project-callout">
+            <div class="project-callout-icon">🎓</div>
+            <div class="project-callout-text">
+              <h4>Final Project — Your Complete Design Portfolio</h4>
+              <p>Compile all 5 module projects into a cohesive, professional portfolio. Present your work, your AI workflow process, and your designer story. This unlocks your Future Stack Academy Certificate.</p>
+            </div>
+            <div class="project-callout-badge">Certificate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ENROLL BANNER -->
+<div class="enroll-banner">
+  <div>
+    <h2>Ready to start learning?</h2>
+    <p>Full access to all 6 modules, 120+ lessons, and 18 AI tool deep-dives.</p>
+  </div>
+  <a class="enroll-btn" href="future-stack-academy.html#pricing">Enroll Now — From $149 →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">✦ Future Stack Academy</div>
+  <div>© 2026 Future Stack Academy · Founded by Adesina Israel Ayomide (EazeAi)</div>
+  <div>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="mailto:Isrealadesina3@gmail.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+  // Toggle module open/close
+  function toggleModule(section) {
+    section.classList.toggle('open');
+  }
+
+  // Filter lessons by type
+  function filterLessons(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const items = document.querySelectorAll('.lesson-item');
+    let count = 0;
+    items.forEach(item => {
+      if (type === 'all' || item.dataset.type === type) {
+        item.style.display = 'flex';
+        count++;
+      } else {
+        item.style.display = 'none';
+      }
+    });
+    // Open all modules when filtering
+    if (type !== 'all') {
+      document.querySelectorAll('.module-section').forEach(s => s.classList.add('open'));
+    }
+    document.getElementById('filterCount').textContent =
+      type === 'all' ? 'Showing all 124 lessons' : `Showing ${count} ${type} lessons`;
+  }
+
+  // Sidebar active state
+  function setActive(el) {
+    document.querySelectorAll('.sidebar-module').forEach(m => m.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // Build module dots in progress panel
+  const colors = ['#ff4d1c','#f5c842','#9b5cf6','#00e5ff','#22c55e','#f97316'];
+  const dotsContainer = document.getElementById('modDots');
+  colors.forEach((c, i) => {
+    for(let j = 0; j < (i===3?5:3); j++) {
+      const d = document.createElement('span');
+      d.className = 'mod-dot';
+      d.style.background = c;
+      d.style.opacity = '0.6';
+      dotsContainer.appendChild(d);
+    }
+  });
+
+  // Scroll-based sidebar highlight
+  const sections = document.querySelectorAll('.module-section');
+  const sidebarLinks = document.querySelectorAll('.sidebar-module');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 200) current = s.id;
+    });
+    sidebarLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
