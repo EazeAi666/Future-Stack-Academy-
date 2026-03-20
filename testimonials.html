@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Student Stories — Future Stack Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,ital,wght@9..40,0,300;9..40,0,400;9..40,0,500;9..40,1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0a0a0f; --paper: #f5f2ea; --accent: #ff4d1c;
+    --electric: #00e5ff; --gold: #f5c842; --muted: #6b6b7a;
+    --border: #e2ddd4; --card: #ffffff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(245,242,234,0.92); backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.05rem; letter-spacing: -0.02em; text-decoration: none; color: var(--ink); display: flex; align-items: center; gap: 0.45rem; }
+  .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+  .nav-links a { font-size: 0.87rem; font-weight: 500; text-decoration: none; color: var(--muted); transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--ink); font-weight: 700; }
+  .nav-cta { background: var(--ink); color: var(--paper); padding: 0.52rem 1.25rem; border-radius: 100px; font-size: 0.84rem; font-weight: 600; text-decoration: none; transition: background 0.2s; }
+  .nav-cta:hover { background: var(--accent); }
+
+  /* HEADER */
+  .page-header { padding: 9rem 6rem 5rem; text-align: center; position: relative; overflow: hidden; border-bottom: 1px solid var(--border); }
+  .page-header::before { content: '❝'; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font-size: 28rem; color: rgba(0,0,0,0.03); font-family: Georgia, serif; pointer-events: none; line-height: 1; }
+  .header-eyebrow { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.2rem; display: inline-flex; align-items: center; gap: 0.6rem; position: relative; }
+  .header-eyebrow::before, .header-eyebrow::after { content: ''; width: 20px; height: 2px; background: var(--accent); }
+  .page-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.5rem, 5vw, 5rem); letter-spacing: -0.04em; line-height: 1; margin-bottom: 1.2rem; position: relative; }
+  .page-title em { font-style: normal; color: var(--accent); }
+  .page-desc { font-size: 1.05rem; color: var(--muted); line-height: 1.7; max-width: 540px; margin: 0 auto 2.5rem; position: relative; }
+  .header-stats { display: inline-flex; gap: 3rem; background: var(--ink); border-radius: 16px; padding: 1.5rem 3rem; }
+  .h-stat { text-align: center; }
+  .h-stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; letter-spacing: -0.04em; color: var(--paper); }
+  .h-stat-num span { color: var(--accent); }
+  .h-stat-label { font-size: 0.75rem; color: rgba(245,242,234,0.45); margin-top: 0.2rem; }
+  .h-stat-divider { width: 1px; background: rgba(255,255,255,0.08); }
+
+  /* FILTER */
+  .filter-section { padding: 1.5rem 6rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; background: var(--paper); position: sticky; top: 65px; z-index: 50; }
+  .filter-label { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .filter-btn { padding: 0.4rem 1rem; border-radius: 100px; font-size: 0.8rem; font-weight: 500; cursor: pointer; border: 1.5px solid var(--border); background: transparent; color: var(--muted); transition: all 0.18s; }
+  .filter-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .filter-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .filter-count { margin-left: auto; font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--muted); }
+
+  /* FEATURED */
+  .featured-section { padding: 5rem 6rem 3rem; }
+  .featured-card { background: var(--ink); border-radius: 24px; padding: 3.5rem 4rem; position: relative; overflow: hidden; display: grid; grid-template-columns: 1fr 320px; gap: 4rem; align-items: center; }
+  .fc-bg { position: absolute; right: -100px; top: -100px; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(255,77,28,0.12), transparent 70%); pointer-events: none; }
+  .fc-bg2 { position: absolute; left: 20%; bottom: -80px; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(0,229,255,0.06), transparent 70%); pointer-events: none; }
+  .fc-quote-mark { font-family: Georgia, serif; font-size: 8rem; color: rgba(255,77,28,0.2); line-height: 0.8; margin-bottom: 1rem; position: relative; z-index: 1; }
+  .fc-text { font-family: 'Syne', sans-serif; font-weight: 600; font-size: clamp(1.1rem, 2vw, 1.5rem); color: var(--paper); line-height: 1.5; letter-spacing: -0.01em; margin-bottom: 2rem; position: relative; z-index: 1; }
+  .fc-author { display: flex; align-items: center; gap: 1rem; position: relative; z-index: 1; }
+  .fc-avatar { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: white; flex-shrink: 0; }
+  .fc-author-info .fc-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--paper); }
+  .fc-author-info .fc-role { font-size: 0.78rem; color: rgba(245,242,234,0.45); margin-top: 0.1rem; }
+  .fc-stars { color: var(--gold); font-size: 0.9rem; margin-top: 0.3rem; }
+  .fc-right { position: relative; z-index: 1; }
+  .fc-outcome { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; }
+  .fc-outcome-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(245,242,234,0.3); margin-bottom: 0.5rem; }
+  .fc-outcome-value { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.6rem; letter-spacing: -0.03em; color: var(--accent); }
+  .fc-outcome-desc { font-size: 0.78rem; color: rgba(245,242,234,0.5); margin-top: 0.2rem; }
+  .fc-tag { display: inline-block; background: rgba(255,77,28,0.15); border: 1px solid rgba(255,77,28,0.25); color: var(--accent); font-size: 0.72rem; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 6px; margin: 0.25rem 0.2rem 0 0; font-family: 'Space Mono', monospace; letter-spacing: 0.05em; }
+
+  /* MASONRY */
+  .testimonials-section { padding: 2rem 6rem 6rem; }
+  .section-label { font-family: 'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.6rem; }
+  .section-label::before { content: ''; width: 16px; height: 1px; background: var(--muted); }
+  .masonry-grid { columns: 3; column-gap: 1.2rem; }
+  .testimonial-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.8rem; break-inside: avoid; margin-bottom: 1.2rem; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; display: inline-block; width: 100%; }
+  .testimonial-card:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(0,0,0,0.08); }
+  .testimonial-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; opacity: 0; transition: opacity 0.2s; }
+  .testimonial-card:hover::before { opacity: 1; }
+  .tc-accent-1::before { background: linear-gradient(90deg, var(--accent), var(--gold)); }
+  .tc-accent-2::before { background: linear-gradient(90deg, var(--electric), #9b5cf6); }
+  .tc-accent-3::before { background: linear-gradient(90deg, #22c55e, var(--electric)); }
+  .tc-accent-4::before { background: linear-gradient(90deg, #9b5cf6, var(--accent)); }
+  .tc-accent-5::before { background: linear-gradient(90deg, var(--gold), var(--accent)); }
+  .tc-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; }
+  .tc-avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.9rem; color: white; flex-shrink: 0; }
+  .tc-author-info { margin-left: 0.8rem; flex: 1; }
+  .tc-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--ink); }
+  .tc-role { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
+  .tc-stars { color: var(--gold); font-size: 0.78rem; }
+  .tc-verified { font-size: 0.65rem; color: #22c55e; font-weight: 600; display: flex; align-items: center; gap: 0.25rem; font-family: 'Space Mono', monospace; flex-shrink: 0; }
+  .tc-quote { font-size: 0.875rem; color: var(--ink); line-height: 1.68; margin: 0.8rem 0 1.2rem; font-style: italic; padding-left: 0.8rem; border-left: 2px solid var(--border); }
+  .tc-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  .tc-module-tag { font-size: 0.7rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 5px; font-family: 'Space Mono', monospace; letter-spacing: 0.04em; }
+  .tc-outcome-chip { font-size: 0.72rem; color: var(--muted); display: flex; align-items: center; gap: 0.3rem; }
+  .tc-outcome-chip strong { color: var(--ink); font-weight: 600; }
+
+  /* highlight card */
+  .tc-highlight { background: var(--accent); color: white; }
+  .tc-highlight .tc-name { color: white; }
+  .tc-highlight .tc-role { color: rgba(255,255,255,0.65); }
+  .tc-highlight .tc-quote { color: white; border-left-color: rgba(255,255,255,0.3); font-style: normal; font-size: 1rem; font-family: 'Syne', sans-serif; font-weight: 600; }
+  .tc-highlight .tc-stars { color: var(--gold); }
+  .tc-highlight .tc-verified { color: rgba(255,255,255,0.8); }
+  .tc-highlight .tc-outcome-chip { color: rgba(255,255,255,0.75); }
+  .tc-highlight .tc-outcome-chip strong { color: white; }
+
+  /* video card */
+  .tc-video { background: var(--ink); }
+  .tc-video .tc-name { color: var(--paper); }
+  .tc-video .tc-role { color: rgba(245,242,234,0.45); }
+  .tc-video .tc-quote { color: rgba(245,242,234,0.8); border-left-color: rgba(255,255,255,0.15); }
+  .tc-video .tc-outcome-chip { color: rgba(245,242,234,0.6); }
+  .tc-video .tc-outcome-chip strong { color: var(--paper); }
+  .video-play-area { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.5rem; text-align: center; margin-bottom: 1.2rem; cursor: pointer; transition: background 0.2s; }
+  .video-play-area:hover { background: rgba(255,255,255,0.1); }
+  .video-play-btn { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 0.7rem; transition: transform 0.2s; }
+  .video-play-area:hover .video-play-btn { transform: scale(1.1); }
+  .video-label { font-size: 0.78rem; color: rgba(245,242,234,0.5); }
+
+  /* BEFORE AFTER */
+  .before-after-section { background: var(--ink); padding: 5rem 6rem; }
+  .ba-header { text-align: center; margin-bottom: 3rem; }
+  .ba-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.8rem, 3vw, 3rem); letter-spacing: -0.04em; color: var(--paper); margin-bottom: 0.8rem; }
+  .ba-title em { font-style: normal; color: var(--gold); }
+  .ba-desc { font-size: 0.95rem; color: rgba(245,242,234,0.45); }
+  .ba-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .ba-card { border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07); }
+  .ba-before { background: rgba(255,255,255,0.04); padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .ba-after { background: rgba(255,77,28,0.08); padding: 1.5rem; }
+  .ba-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.6rem; }
+  .ba-before .ba-label { color: rgba(245,242,234,0.25); }
+  .ba-after .ba-label { color: var(--accent); }
+  .ba-text { font-size: 0.85rem; color: rgba(245,242,234,0.6); line-height: 1.55; }
+  .ba-after .ba-text { color: rgba(245,242,234,0.85); }
+  .ba-person { padding: 1rem 1.5rem; background: rgba(255,255,255,0.03); display: flex; align-items: center; gap: 0.8rem; border-top: 1px solid rgba(255,255,255,0.06); }
+  .ba-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.72rem; color: white; }
+  .ba-person-name { font-size: 0.8rem; font-weight: 600; color: var(--paper); }
+  .ba-person-loc { font-size: 0.68rem; color: rgba(245,242,234,0.35); }
+
+  /* CTA */
+  .cta-section { background: var(--accent); padding: 5rem 6rem; text-align: center; }
+  .cta-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 4vw, 3.5rem); letter-spacing: -0.04em; color: white; margin-bottom: 1rem; }
+  .cta-desc { font-size: 1rem; color: rgba(255,255,255,0.75); margin-bottom: 2.5rem; line-height: 1.6; }
+  .cta-btn { background: white; color: var(--accent); padding: 1rem 2.5rem; border-radius: 100px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; text-decoration: none; display: inline-block; transition: all 0.2s; }
+  .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.2); }
+
+  footer { background: var(--ink); color: rgba(245,242,234,0.4); padding: 2.5rem 6rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.8rem; }
+  footer .logo { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--paper); }
+  footer a { color: rgba(245,242,234,0.4); text-decoration: none; margin-left: 1.2rem; }
+  footer a:hover { color: var(--electric); }
+
+  .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 1100px) { .masonry-grid { columns: 2; } .ba-grid { grid-template-columns: 1fr; max-width: 500px; margin: 0 auto; } .featured-card { grid-template-columns: 1fr; } }
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; } .nav-links { display: none; }
+    .page-header { padding: 8rem 1.5rem 3rem; }
+    .header-stats { flex-direction: column; gap: 1rem; padding: 1.5rem 2rem; }
+    .h-stat-divider { display: none; }
+    .filter-section { padding: 1rem 1.5rem; }
+    .featured-section, .testimonials-section, .cta-section { padding: 3rem 1.5rem; }
+    .before-after-section { padding: 4rem 1.5rem; }
+    .masonry-grid { columns: 1; }
+    footer { padding: 2rem 1.5rem; flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html"><span class="nav-dot"></span> Future Stack Academy</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="lessons.html">Lessons</a></li>
+    <li><a href="testimonials.html" class="active">Stories</a></li>
+    <li><a href="index.html#pricing">Pricing</a></li>
+  </ul>
+  <a class="nav-cta" href="enroll.html">Enroll Now →</a>
+</nav>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="header-eyebrow">Student Stories</div>
+  <h1 class="page-title">Real students.<br/><em>Real results.</em></h1>
+  <p class="page-desc">Don't take our word for it. Hear from the designers, freelancers, and career changers who transformed their creative careers with Future Stack Academy.</p>
+  <div class="header-stats">
+    <div class="h-stat"><div class="h-stat-num">240<span>+</span></div><div class="h-stat-label">Students Enrolled</div></div>
+    <div class="h-stat-divider"></div>
+    <div class="h-stat"><div class="h-stat-num">4.9<span>★</span></div><div class="h-stat-label">Average Rating</div></div>
+    <div class="h-stat-divider"></div>
+    <div class="h-stat"><div class="h-stat-num">92<span>%</span></div><div class="h-stat-label">Completion Rate</div></div>
+    <div class="h-stat-divider"></div>
+    <div class="h-stat"><div class="h-stat-num">18<span>+</span></div><div class="h-stat-label">Countries</div></div>
+  </div>
+</div>
+
+<!-- FILTER -->
+<div class="filter-section">
+  <span class="filter-label">Filter by</span>
+  <button class="filter-btn active" onclick="filterCards('all',this)">All Stories</button>
+  <button class="filter-btn" onclick="filterCards('freelance',this)">💼 Freelancers</button>
+  <button class="filter-btn" onclick="filterCards('career',this)">🚀 Career Change</button>
+  <button class="filter-btn" onclick="filterCards('ai',this)">🤖 AI Focus</button>
+  <button class="filter-btn" onclick="filterCards('beginner',this)">🌱 Beginners</button>
+  <button class="filter-btn" onclick="filterCards('africa',this)">🌍 Africa</button>
+  <span class="filter-count" id="filterCount">Showing all 9 stories</span>
+</div>
+
+<!-- FEATURED -->
+<div class="featured-section fade-up">
+  <div class="featured-card">
+    <div class="fc-bg"></div><div class="fc-bg2"></div>
+    <div>
+      <div class="fc-quote-mark">❝</div>
+      <div class="fc-text">"Before Future Stack Academy I was charging ₦15,000 per logo. Three months after completing the course — and learning how to use Midjourney and Firefly in my workflow — I landed my first international client and charged $800 for a brand identity. The AI module alone was worth 10x the course fee."</div>
+      <div class="fc-author">
+        <div class="fc-avatar" style="background:var(--accent);">TA</div>
+        <div class="fc-author-info">
+          <div class="fc-name">Taiwo Adeyemi</div>
+          <div class="fc-role">Freelance Brand Designer · Lagos, Nigeria 🇳🇬</div>
+          <div class="fc-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-right">
+      <div class="fc-outcome">
+        <div class="fc-outcome-label">Income change</div>
+        <div class="fc-outcome-value">5.3x</div>
+        <div class="fc-outcome-desc">Increased per-project rate within 90 days of graduating</div>
+      </div>
+      <div class="fc-outcome" style="background:rgba(0,229,255,0.08);border-color:rgba(0,229,255,0.15);">
+        <div class="fc-outcome-label">Time to first client</div>
+        <div class="fc-outcome-value" style="color:var(--electric);">3 weeks</div>
+        <div class="fc-outcome-desc">After completing Module 06 — Freelance & Career Launch</div>
+      </div>
+      <div><span class="fc-tag">AI Workflow</span><span class="fc-tag">Brand Identity</span><span class="fc-tag">Nigeria</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="testimonials-section">
+  <div class="section-label">All Student Stories</div>
+  <div class="masonry-grid" id="masonryGrid">
+
+    <div class="testimonial-card tc-accent-1 fade-up" data-tags="freelance ai africa">
+      <div class="tc-header">
+        <div style="display:flex;align-items:center;gap:0.8rem;">
+          <div class="tc-avatar" style="background:#9b5cf6;">KO</div>
+          <div class="tc-author-info"><div class="tc-name">Kemi Okonkwo</div><div class="tc-role">UI Designer · Abuja, Nigeria 🇳🇬</div></div>
+        </div>
+        <div class="tc-verified">✓ Verified</div>
+      </div>
+      <div class="tc-stars">★★★★★</div>
+      <div class="tc-quote">"The AI Tools module genuinely changed how I work. I used to spend 3 days on a brand concept. Now I use Midjourney for ideation and Firefly to refine — same quality output in half a day. My clients have no idea and honestly it doesn't matter — the results speak."</div>
+      <div class="tc-footer">
+        <span class="tc-module-tag" style="background:rgba(0,229,255,0.1);color:#0099b0;">Module 04 — AI Tools</span>
+        <span class="tc-outcome-chip">💰 <strong>2x faster</strong> delivery</span>
+      </div>
+    </div>
+
+    <div class="testimonial-card tc-highlight tc-accent-1 fade-up" data-tags="career beginner">
+      <div class="tc-header">
+        <div style="display:flex;align-items:center;gap:0.8rem;">
+          <div class="tc-avatar" style="background:rgba(255,255,255,0.2);">MR</div>
+          <div class="tc-author-info"><div class="tc-name">Marcus Reid</div><div class="tc-role">Former Teacher → Brand Designer 🇬🇧</div></div>
+        </div>
+        <div class="tc-verified" style="color:rgba(255,255,255,0.7);">✓ Verified</div>
+      </div>
+      <div class="tc-stars">★★★★★</div>
+      <div class="tc-quote">"I left teaching after 8 years to pursue design. Zero experience. I completed Future Stack Academy in 10 weeks and within 2 months had my first freelance client. This course is the real deal."</div>
+      <div class="tc-footer">
+        <span class="tc-module-tag" style="background:rgba(255,255,255,0.2);color:white;">Career Change</span>
+        <span class="tc-outcome-chip">🚀 <strong>0 → freelancer</strong></span>
+      </div>
+    </div>
+
+    <div class="testimonial-card tc-accent-2 fade-up" data-tags="ai beginner africa">
+      <div class="tc-header">
+        <div style="display:flex;align-items:center;gap:0.8rem;">
+          <div class="tc-avatar" style="background:#f97316;">AN</div>
+          <div class="tc-author-info"><div class="tc-name">Amina Nwosu</div><div class="tc-role">Social Media Manager · Lagos 🇳🇬</div></div>
+        </div>
+        <div class="tc-verified">✓ Verified</div>
+      </div>
+      <div class="tc-stars">★★★★★</div>
+      <div class="tc-quote">"I'm not a 'designer' by title but I create all the visuals for my company's social media. The Canva AI and Midjourney lessons transformed what I'm able to produce. My manager noticed and I got a promotion. Worth every naira."</div>
+      <div class="tc-footer">
+        <span class="tc-module-tag" style="background:rgba(249,115,22,0.1);color:#f97316;">Module 05 — Digital</span>
+        <span class="tc-outcome-chip">📈 <strong>Promoted</strong> at work</span>
+      </div>
+    </div>
+
+    <div class="testimonial-card tc-video tc-accent-3 fade-up" data-tags="freelance career africa">
+      <div class="tc-header">
+        <div style="display:flex;align-items:center;gap:0.8rem;">
+          <div class="tc-avatar" style="background:#22c55e;">PS</div>
+          <div class="tc-author-info"><div class="tc-name">Precious Samson</div><div class="tc-role">Freelance Designer · Port Harcourt 🇳🇬</div></div>
+        </div>
+        <div class="tc-verified" style="color:rgba(255,255,255,0.6);">✓ Verified</div>
+      </div>
+      <div class="tc-stars">★★★★★</div>
+      <div class="video-play-area">
+        <div class="video-play-btn">▶</div>
+        <div class="video-label">Watch Precious's story — 2:34</div>
+      </div>
+      <div class="tc-quote">"From ₦0 freelance income to ₦450,000 in my first month after graduating. The portfolio module is what made the difference."</div>
+      <div class="tc-footer">
+        <span class="tc-module-tag" style="background:rgba(34,197,94,0.15);color:#22c55e;">Module 06 — Career</span>
+        <span class="tc-outcome-chip">💰 <strong>₦450k</strong> first month</span>
+      </div>
+    </div>
+
+    <div class="testimonial-card tc-accent-3 fade-up" data-tags="ai freelance">
+      <div class="tc-header">
+        <div style="display:flex;align-items:center;gap:0.8rem;">
+          <div class="tc-avatar" style="background:#00b4cc;">JL</div>
+          <div class="tc-author-info"><div class="tc-name">James Liu</div><div class="tc-role">Product Designer · Singapore 🇸🇬</div></div>
+        </div>
+        <div class="tc-verified">✓ Verified</div>
+      </div>
+      <div class="tc-stars">★★★★★</div>
+      <div class="tc-quote">"I've taken a lot of design courses. This is the only one that made AI feel like a natural part of the workflow rather than a separate skill. The ControlNet and Stable Diffusion modules were beyond what I expected from an online course."</div>
+      <div class="tc-footer">
+        <span class="tc-module-tag" style="background:rgba(0,229,255,0.1);color:#0099b0;">AI Deep Dive</span>
+        <span class="tc-outcome-chip">🔥 <strong>Workflow</strong> transformed</span>
+      </div>
+    </div>
+
+    <div class="testimonial-card tc-accent-4 fade-up" data-tags="beginner career africa">
+      <div class="tc-header">
+        <div style="display:flex;align-items:center;gap:0.8rem;">
+          <div class="tc-avatar" style="background:#9b5cf6;">FA</div>
+          <div class="tc-author-info"><div class="tc-name">Fatima Abdullahi</div><div class="tc-role">Graphic Designer · Kano 🇳🇬</div></div>
+        </div>
+        <div class="tc-verified">✓ Verified</div>
+      </div>
+      <div class="tc-stars">★★★★★</div>
+      <div class="tc-quote">"The typography module alone was better than the entire design course I paid for at university. Understanding type as a system — not just picking pretty fonts — was a revelation. My work looks completely different now."</div>
+      <div class="tc-footer">
+        <span class="tc-module-tag" style="background:rgba(155,92,246,0.1);color:#9b5cf6;">Module 02 — Typography</span>
+        <span class="tc-outcome-chip">✨ <strong>Portfolio</strong> rebuilt</span>
+      </div>
+    </div>
+
+    <div class="testimonial-card tc-accent-5 fade-up" data-tags="freelance ai">
+      <div class="tc-header">
+        <div style="display:flex;align-items:center;gap:0.8rem;">
+          <div class="tc-avatar" style="background:#ff4d1c;">EB</div>
+          <div class="tc-author-info"><div class="tc-name">Elena Bravo</div><div class="tc-role">Brand Consultant · Mexico City 🇲🇽</div></div>
+        </div>
+        <div class="tc-verified">✓ Verified</div>
+      </div>
+      <div class="tc-stars">★★★★★</div>
+      <div class="tc-quote">"I added 'AI-augmented design workflow' to my service offering after Module 04. My project rate went up 60% because clients see it as a premium service. Future Stack Academy taught me not just the tools but how to sell them."</div>
+      <div class="tc-footer">
+        <span class="tc-module-tag" style="background:rgba(255,77,28,0.1);color:var(--accent);">Freelance Strategy</span>
+        <span class="tc-outcome-chip">💰 <strong>+60%</strong> project rate</span>
+      </div>
+    </div>
+
+    <div class="testimonial-card tc-accent-1 fade-up" data-tags="beginner africa career">
+      <div class="tc-header">
+        <div style="display:flex;align-items:center;gap:0.8rem;">
+          <div class="tc-avatar" style="background:#f5c842;color:var(--ink);">CO</div>
+          <div class="tc-author-info"><div class="tc-name">Chidi Okafor</div><div class="tc-role">Graduate → Designer · Enugu 🇳🇬</div></div>
+        </div>
+        <div class="tc-verified">✓ Verified</div>
+      </div>
+      <div class="tc-stars">★★★★★</div>
+      <div class="tc-quote">"I started this course with zero design experience. By Module 3 I was already taking on small client work. The way EazeAi structured the curriculum — fundamentals first, AI second — means you actually understand what you're doing, not just clicking buttons."</div>
+      <div class="tc-footer">
+        <span class="tc-module-tag" style="background:rgba(245,200,66,0.15);color:#a07800;">Complete Course</span>
+        <span class="tc-outcome-chip">🌱 <strong>Zero</strong> to employed</span>
+      </div>
+    </div>
+
+    <div class="testimonial-card tc-accent-2 fade-up" data-tags="ai career">
+      <div class="tc-header">
+        <div style="display:flex;align-items:center;gap:0.8rem;">
+          <div class="tc-avatar" style="background:#0099b0;">SP</div>
+          <div class="tc-author-info"><div class="tc-name">Sophie Patel</div><div class="tc-role">Marketing Director → UX Designer 🇮🇳</div></div>
+        </div>
+        <div class="tc-verified">✓ Verified</div>
+      </div>
+      <div class="tc-stars">★★★★★</div>
+      <div class="tc-quote">"The Figma AI module is honestly what pushed me over the edge to fully switch careers. I could see exactly how I'd use these skills in a real UX role. Got my first UX job offer 6 weeks after completing the course."</div>
+      <div class="tc-footer">
+        <span class="tc-module-tag" style="background:rgba(0,229,255,0.1);color:#0099b0;">Module 05 — UI/UX</span>
+        <span class="tc-outcome-chip">🚀 <strong>Hired</strong> in 6 weeks</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BEFORE AFTER -->
+<div class="before-after-section">
+  <div class="ba-header">
+    <div class="section-label" style="justify-content:center;color:rgba(245,242,234,0.3);">Transformation Stories</div>
+    <div class="ba-title">Before <em>Future Stack.</em><br/>After Future Stack.</div>
+    <div class="ba-desc">Three students. Three completely different starting points. One outcome.</div>
+  </div>
+  <div class="ba-grid">
+    <div class="ba-card fade-up">
+      <div class="ba-before"><div class="ba-label">Before</div><div class="ba-text">Charging ₦5,000 per flyer design on WhatsApp. No portfolio. No understanding of why designs work. Using Canva templates and hoping for the best.</div></div>
+      <div class="ba-after"><div class="ba-label">After Future Stack Academy</div><div class="ba-text">Running a full brand identity service at ₦200,000+ per project. Uses Midjourney + Firefly in every client workflow. Has a Behance portfolio with 4 case studies.</div></div>
+      <div class="ba-person"><div class="ba-avatar" style="background:var(--accent);">IO</div><div><div class="ba-person-name">Ifeanyi Obi</div><div class="ba-person-loc">Freelancer · Lagos, Nigeria</div></div></div>
+    </div>
+    <div class="ba-card fade-up">
+      <div class="ba-before"><div class="ba-label">Before</div><div class="ba-text">10 years in accounting. Wanted to switch to design but had no idea where to start. Tried YouTube tutorials but never finished anything or built real skills.</div></div>
+      <div class="ba-after"><div class="ba-label">After Future Stack Academy</div><div class="ba-text">Junior designer at a digital agency in Accra. Uses AI tools daily. Built a portfolio during the course that landed her the interview. Salary 40% higher than accounting role.</div></div>
+      <div class="ba-person"><div class="ba-avatar" style="background:#22c55e;">AA</div><div><div class="ba-person-name">Abena Asante</div><div class="ba-person-loc">Junior Designer · Accra, Ghana</div></div></div>
+    </div>
+    <div class="ba-card fade-up">
+      <div class="ba-before"><div class="ba-label">Before</div><div class="ba-text">Mid-level designer at an agency. Good with tools but felt behind on AI. Worried about being replaced. Hadn't updated portfolio in 3 years.</div></div>
+      <div class="ba-after"><div class="ba-label">After Future Stack Academy</div><div class="ba-text">Now leads AI workflow adoption at his agency. Promoted to Senior Designer. His team uses 6 AI tools he introduced after completing the course.</div></div>
+      <div class="ba-person"><div class="ba-avatar" style="background:#9b5cf6;">DM</div><div><div class="ba-person-name">Daniel Mensah</div><div class="ba-person-loc">Senior Designer · Nairobi, Kenya</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2 class="cta-title">Your story starts here.</h2>
+  <p class="cta-desc">Join 240+ students already building their creative future with Future Stack Academy.<br/>Enroll today and write your own transformation story.</p>
+  <a class="cta-btn" href="enroll.html">Start Your Journey →</a>
+</div>
+
+<footer>
+  <div class="logo">✦ Future Stack Academy</div>
+  <div>© 2026 Future Stack Academy · Founded by Adesina Israel Ayomide (EazeAi)</div>
+  <div><a href="#">Privacy</a><a href="#">Terms</a><a href="mailto:Isrealadesina3@gmail.com">Contact</a></div>
+</footer>
+
+<script>
+  function filterCards(tag, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cards = document.querySelectorAll('.testimonial-card');
+    let count = 0;
+    cards.forEach(card => {
+      const tags = card.dataset.tags || '';
+      if(tag === 'all' || tags.includes(tag)) { card.style.display = 'inline-block'; count++; }
+      else { card.style.display = 'none'; }
+    });
+    document.getElementById('filterCount').textContent = tag === 'all' ? 'Showing all 9 stories' : `Showing ${count} stories`;
+  }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => { if(e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
