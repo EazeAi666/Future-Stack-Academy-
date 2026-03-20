@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Enroll — Future Stack Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f5f2ea;
+    --accent: #ff4d1c;
+    --electric: #00e5ff;
+    --gold: #f5c842;
+    --muted: #6b6b7a;
+    --border: #e2ddd4;
+    --success: #22c55e;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--ink);
+    color: var(--paper);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND ── */
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0;
+    background: var(--ink);
+    overflow: hidden;
+  }
+  .bg-circle {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); opacity: 0.18;
+    pointer-events: none;
+  }
+  .bc-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -150px; }
+  .bc-2 { width: 500px; height: 500px; background: var(--electric); bottom: -150px; left: -100px; opacity: 0.1; }
+  .bc-3 { width: 300px; height: 300px; background: var(--gold); top: 50%; left: 40%; opacity: 0.08; }
+
+  /* grid lines */
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.05rem; letter-spacing: -0.02em;
+    text-decoration: none; color: var(--paper);
+    display: flex; align-items: center; gap: 0.45rem;
+  }
+  .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .nav-back {
+    font-size: 0.85rem; color: rgba(245,242,234,0.5);
+    text-decoration: none; display: flex; align-items: center; gap: 0.4rem;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--paper); }
+
+  /* ── MAIN LAYOUT ── */
+  .page-wrap {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 70px;
+  }
+
+  /* ── LEFT PANEL ── */
+  .left-panel {
+    padding: 5rem 4rem 5rem 6rem;
+    display: flex; flex-direction: column; justify-content: center;
+    border-right: 1px solid rgba(255,255,255,0.07);
+    position: sticky; top: 70px;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+  }
+
+  .plan-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(255,77,28,0.15); border: 1px solid rgba(255,77,28,0.3);
+    color: var(--accent); padding: 0.4rem 1rem; border-radius: 100px;
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 2rem; width: fit-content;
+  }
+
+  .left-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2rem, 3.5vw, 3.5rem);
+    letter-spacing: -0.04em; line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+  .left-title em { font-style: normal; color: var(--accent); }
+
+  .left-desc {
+    font-size: 0.95rem; color: rgba(245,242,234,0.55);
+    line-height: 1.7; margin-bottom: 2.5rem; max-width: 400px;
+  }
+
+  /* plan selector */
+  .plan-selector { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2.5rem; }
+  .plan-option {
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 14px; padding: 1.2rem 1.5rem;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 1rem;
+    position: relative;
+  }
+  .plan-option:hover { border-color: rgba(255,255,255,0.25); }
+  .plan-option.selected {
+    border-color: var(--accent);
+    background: rgba(255,77,28,0.08);
+  }
+  .plan-option.selected.featured-plan {
+    border-color: var(--gold);
+    background: rgba(245,200,66,0.06);
+  }
+  .plan-radio {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.2);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .plan-option.selected .plan-radio {
+    border-color: var(--accent); background: var(--accent);
+  }
+  .plan-option.selected.featured-plan .plan-radio {
+    border-color: var(--gold); background: var(--gold);
+  }
+  .plan-radio::after {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: white; opacity: 0; transition: opacity 0.2s;
+  }
+  .plan-option.selected .plan-radio::after { opacity: 1; }
+  .plan-info { flex: 1; }
+  .plan-name {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem;
+    color: var(--paper); margin-bottom: 0.2rem;
+  }
+  .plan-detail { font-size: 0.78rem; color: rgba(245,242,234,0.45); }
+  .plan-price {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.3rem; color: var(--paper); letter-spacing: -0.02em;
+  }
+  .plan-option.featured-plan .plan-price { color: var(--gold); }
+  .popular-tag {
+    position: absolute; top: -10px; right: 14px;
+    background: var(--gold); color: var(--ink);
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 0.2rem 0.7rem; border-radius: 100px;
+  }
+
+  /* included features */
+  .includes-title {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(245,242,234,0.3); margin-bottom: 1rem;
+  }
+  .includes-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .includes-list li {
+    display: flex; align-items: center; gap: 0.7rem;
+    font-size: 0.83rem; color: rgba(245,242,234,0.6);
+  }
+  .includes-list li .ic {
+    width: 18px; height: 18px; border-radius: 5px;
+    background: rgba(255,77,28,0.2); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; flex-shrink: 0;
+  }
+
+  /* ── RIGHT PANEL (FORM) ── */
+  .right-panel {
+    padding: 5rem 6rem 5rem 4rem;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+
+  .form-header {
+    margin-bottom: 2.5rem;
+  }
+  .form-eyebrow {
+    font-family: 'Space Mono', monospace; font-size: 0.68rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(245,242,234,0.35); margin-bottom: 0.7rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .form-eyebrow::before { content: ''; width: 16px; height: 1px; background: rgba(245,242,234,0.2); }
+  .form-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.8rem; letter-spacing: -0.03em;
+    color: var(--paper); margin-bottom: 0.4rem;
+  }
+  .form-sub { font-size: 0.875rem; color: rgba(245,242,234,0.4); line-height: 1.5; }
+
+  /* tabs */
+  .form-tabs {
+    display: flex; gap: 0; margin-bottom: 2rem;
+    background: rgba(255,255,255,0.05); border-radius: 10px; padding: 4px;
+  }
+  .tab-btn {
+    flex: 1; padding: 0.6rem; border-radius: 8px;
+    border: none; background: transparent; cursor: pointer;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.82rem;
+    color: rgba(245,242,234,0.4); transition: all 0.2s; letter-spacing: 0.01em;
+  }
+  .tab-btn.active {
+    background: var(--accent); color: white;
+  }
+
+  /* form fields */
+  .form-body { display: none; }
+  .form-body.active { display: flex; flex-direction: column; gap: 1.2rem; }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .field-group { display: flex; flex-direction: column; gap: 0.45rem; }
+  .field-label {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(245,242,234,0.4);
+  }
+  .field-input {
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 0.85rem 1rem;
+    font-size: 0.9rem; color: var(--paper);
+    font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s, background 0.2s;
+    outline: none; width: 100%;
+  }
+  .field-input::placeholder { color: rgba(245,242,234,0.2); }
+  .field-input:focus {
+    border-color: var(--accent);
+    background: rgba(255,77,28,0.05);
+  }
+  select.field-input {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(245,242,234,0.3)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+  select.field-input option { background: #1a1a24; color: var(--paper); }
+
+  .field-input.error { border-color: #ef4444; }
+  .field-error { font-size: 0.72rem; color: #ef4444; margin-top: -0.3rem; display: none; }
+  .field-error.show { display: block; }
+
+  /* password strength */
+  .password-wrap { position: relative; }
+  .password-toggle {
+    position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    color: rgba(245,242,234,0.3); font-size: 1rem; padding: 0;
+    transition: color 0.2s;
+  }
+  .password-toggle:hover { color: var(--paper); }
+  .strength-bar {
+    display: flex; gap: 3px; margin-top: 0.5rem;
+  }
+  .strength-seg {
+    flex: 1; height: 3px; border-radius: 2px;
+    background: rgba(255,255,255,0.1); transition: background 0.3s;
+  }
+  .strength-label { font-size: 0.7rem; color: rgba(245,242,234,0.35); margin-top: 0.3rem; }
+
+  /* checkbox */
+  .checkbox-group {
+    display: flex; align-items: flex-start; gap: 0.8rem;
+    cursor: pointer;
+  }
+  .checkbox-group input[type="checkbox"] { display: none; }
+  .custom-checkbox {
+    width: 18px; height: 18px; border-radius: 5px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; font-size: 0.7rem;
+  }
+  .checkbox-group input:checked + .custom-checkbox {
+    background: var(--accent); border-color: var(--accent); color: white;
+  }
+  .checkbox-label { font-size: 0.82rem; color: rgba(245,242,234,0.5); line-height: 1.5; }
+  .checkbox-label a { color: var(--accent); text-decoration: none; }
+  .checkbox-label a:hover { text-decoration: underline; }
+
+  /* submit button */
+  .submit-btn {
+    width: 100%; padding: 1rem;
+    background: var(--accent); color: white;
+    border: none; border-radius: 12px;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 1rem; cursor: pointer;
+    transition: all 0.2s; letter-spacing: 0.01em;
+    position: relative; overflow: hidden;
+    margin-top: 0.5rem;
+  }
+  .submit-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255,77,28,0.35); }
+  .submit-btn:hover::before { opacity: 1; }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn.loading { pointer-events: none; opacity: 0.7; }
+  .btn-spinner {
+    display: none; width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white; border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .submit-btn.loading .btn-text { display: none; }
+  .submit-btn.loading .btn-spinner { display: block; }
+
+  .divider {
+    display: flex; align-items: center; gap: 1rem; margin: 0.5rem 0;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08);
+  }
+  .divider span { font-size: 0.75rem; color: rgba(245,242,234,0.25); }
+
+  .waitlist-note {
+    text-align: center; font-size: 0.78rem;
+    color: rgba(245,242,234,0.3); line-height: 1.5;
+  }
+  .waitlist-note strong { color: rgba(245,242,234,0.6); }
+
+  /* social login */
+  .social-btn {
+    width: 100%; padding: 0.8rem;
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px; color: var(--paper);
+    font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 0.7rem;
+  }
+  .social-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+
+  /* ── SUCCESS STATE ── */
+  .success-screen {
+    display: none;
+    flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 3rem 2rem;
+    min-height: 400px;
+  }
+  .success-screen.show { display: flex; }
+  .success-icon {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: rgba(34,197,94,0.15); border: 2px solid var(--success);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; margin-bottom: 1.5rem;
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .success-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.8rem; letter-spacing: -0.03em;
+    color: var(--paper); margin-bottom: 0.8rem;
+  }
+  .success-desc { font-size: 0.9rem; color: rgba(245,242,234,0.5); line-height: 1.65; max-width: 360px; margin-bottom: 2rem; }
+  .success-steps {
+    display: flex; flex-direction: column; gap: 0.7rem;
+    width: 100%; max-width: 340px; margin-bottom: 2rem; text-align: left;
+  }
+  .success-step {
+    display: flex; align-items: center; gap: 0.9rem;
+    background: rgba(255,255,255,0.04); border-radius: 10px; padding: 0.8rem 1rem;
+  }
+  .step-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--accent); color: white;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.75rem;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .step-text { font-size: 0.82rem; color: rgba(245,242,234,0.6); }
+  .success-btn {
+    background: var(--accent); color: white;
+    padding: 0.85rem 2rem; border-radius: 100px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem;
+    text-decoration: none; transition: all 0.2s;
+  }
+  .success-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255,77,28,0.3); }
+
+  /* waitlist counter */
+  .waitlist-counter {
+    display: flex; align-items: center; gap: 0.6rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 100px; padding: 0.5rem 1rem;
+    margin-bottom: 1.5rem; width: fit-content;
+  }
+  .counter-avatars { display: flex; }
+  .counter-avatar {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6rem; color: white; font-weight: 700;
+    margin-left: -6px;
+  }
+  .counter-avatar:first-child { margin-left: 0; }
+  .counter-avatar:nth-child(2) { background: var(--electric); color: var(--ink); }
+  .counter-avatar:nth-child(3) { background: var(--gold); color: var(--ink); }
+  .counter-text { font-size: 0.78rem; color: rgba(245,242,234,0.5); }
+  .counter-text strong { color: var(--paper); }
+
+  /* trust badges */
+  .trust-row {
+    display: flex; gap: 1.5rem; flex-wrap: wrap;
+    margin-top: 1.2rem; padding-top: 1.2rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .trust-item {
+    display: flex; align-items: center; gap: 0.45rem;
+    font-size: 0.75rem; color: rgba(245,242,234,0.3);
+  }
+  .trust-item span { font-size: 0.9rem; }
+
+  @media (max-width: 900px) {
+    .page-wrap { grid-template-columns: 1fr; }
+    .left-panel {
+      position: static; height: auto; border-right: none;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      padding: 5rem 2rem 3rem;
+    }
+    .right-panel { padding: 3rem 2rem 5rem; }
+    nav { padding: 1rem 1.5rem; }
+    .field-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BG -->
+<div class="bg-layer">
+  <div class="bg-circle bc-1"></div>
+  <div class="bg-circle bc-2"></div>
+  <div class="bg-circle bc-3"></div>
+  <div class="bg-grid"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <span class="nav-dot"></span> Future Stack Academy
+  </a>
+  <a class="nav-back" href="index.html">← Back to site</a>
+</nav>
+
+<!-- PAGE -->
+<div class="page-wrap">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="plan-badge">✦ Enrollment Open — 2026</div>
+
+    <h1 class="left-title">Start your<br/><em>design</em><br/>journey.</h1>
+    <p class="left-desc">Join Future Stack Academy and become an AI-native designer. Choose your plan below and complete your enrollment in under 2 minutes.</p>
+
+    <div class="waitlist-counter">
+      <div class="counter-avatars">
+        <div class="counter-avatar">A</div>
+        <div class="counter-avatar">K</div>
+        <div class="counter-avatar">P</div>
+      </div>
+      <div class="counter-text"><strong>240+ students</strong> already enrolled</div>
+    </div>
+
+    <!-- PLAN SELECTOR -->
+    <div class="plan-selector" id="planSelector">
+      <div class="plan-option" onclick="selectPlan(this, 'Starter', '$149')">
+        <div class="plan-radio"></div>
+        <div class="plan-info">
+          <div class="plan-name">Starter</div>
+          <div class="plan-detail">Modules 1–3 · 60+ lessons · Certificate</div>
+        </div>
+        <div class="plan-price">$149</div>
+      </div>
+
+      <div class="plan-option featured-plan selected" onclick="selectPlan(this, 'Full Course', '$299')">
+        <div class="popular-tag">Most Popular</div>
+        <div class="plan-radio"></div>
+        <div class="plan-info">
+          <div class="plan-name">Full Course</div>
+          <div class="plan-detail">All 6 modules · 120+ lessons · 18 AI tools</div>
+        </div>
+        <div class="plan-price">$299</div>
+      </div>
+
+      <div class="plan-option" onclick="selectPlan(this, 'Studio', '$599')">
+        <div class="plan-radio"></div>
+        <div class="plan-info">
+          <div class="plan-name">Studio — Team of 5</div>
+          <div class="plan-detail">Everything + 5 seats · Private Slack · Workshop</div>
+        </div>
+        <div class="plan-price">$599</div>
+      </div>
+    </div>
+
+    <!-- INCLUDES -->
+    <div class="includes-title">Every plan includes</div>
+    <ul class="includes-list">
+      <li><span class="ic">✓</span> Lifetime access — no expiry</li>
+      <li><span class="ic">✓</span> Quarterly AI module updates</li>
+      <li><span class="ic">✓</span> Certificate of Completion</li>
+      <li><span class="ic">✓</span> 30-day money-back guarantee</li>
+      <li><span class="ic">✓</span> Community forum access</li>
+    </ul>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+
+    <!-- FORM HEADER -->
+    <div class="form-header">
+      <div class="form-eyebrow">Create your account</div>
+      <div class="form-title">Let's get you in. 👋</div>
+      <div class="form-sub">Already have an account? <a href="#" style="color:var(--accent); text-decoration:none;">Sign in here</a></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="form-tabs">
+      <button class="tab-btn active" onclick="switchTab('enroll', this)">Enroll Now</button>
+      <button class="tab-btn" onclick="switchTab('waitlist', this)">Join Waitlist</button>
+    </div>
+
+    <!-- ENROLL FORM -->
+    <div class="form-body active" id="enrollForm">
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">First Name</label>
+          <input class="field-input" id="firstName" type="text" placeholder="e.g. Adesina" autocomplete="given-name"/>
+          <span class="field-error" id="firstNameErr">Please enter your first name</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Last Name</label>
+          <input class="field-input" id="lastName" type="text" placeholder="e.g. Ayomide" autocomplete="family-name"/>
+          <span class="field-error" id="lastNameErr">Please enter your last name</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Email Address</label>
+        <input class="field-input" id="emailEnroll" type="email" placeholder="you@example.com" autocomplete="email"/>
+        <span class="field-error" id="emailEnrollErr">Please enter a valid email</span>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Password</label>
+        <div class="password-wrap">
+          <input class="field-input" id="passwordEnroll" type="password" placeholder="Min. 8 characters" style="padding-right:3rem"/>
+          <button class="password-toggle" onclick="togglePassword('passwordEnroll', this)" type="button">👁</button>
+        </div>
+        <div class="strength-bar" id="strengthBar">
+          <div class="strength-seg" id="s1"></div>
+          <div class="strength-seg" id="s2"></div>
+          <div class="strength-seg" id="s3"></div>
+          <div class="strength-seg" id="s4"></div>
+        </div>
+        <div class="strength-label" id="strengthLabel">Enter a password</div>
+        <span class="field-error" id="passwordErr">Password must be at least 8 characters</span>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Your Experience Level</label>
+        <select class="field-input" id="experience">
+          <option value="" disabled selected>Select your level</option>
+          <option value="beginner">Complete Beginner — no design experience</option>
+          <option value="some">Some Experience — I've tried design tools</option>
+          <option value="intermediate">Intermediate — I design occasionally</option>
+          <option value="professional">Professional — I work in a design role</option>
+        </select>
+        <span class="field-error" id="experienceErr">Please select your experience level</span>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Selected Plan</label>
+        <input class="field-input" id="selectedPlanDisplay" type="text" value="Full Course — $299" readonly style="background:rgba(245,200,66,0.06); border-color:rgba(245,200,66,0.3); color:var(--gold); cursor:default;"/>
+      </div>
+
+      <label class="checkbox-group" onclick="toggleCheck('agreeCheck', this)">
+        <input type="checkbox" id="agreeCheck"/>
+        <span class="custom-checkbox" id="agreeCheckBox"></span>
+        <span class="checkbox-label">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+      </label>
+
+      <label class="checkbox-group" onclick="toggleCheck('updatesCheck', this)">
+        <input type="checkbox" id="updatesCheck" checked/>
+        <span class="custom-checkbox" id="updatesCheckBox">✓</span>
+        <span class="checkbox-label">Send me course updates, new AI tool alerts, and learning tips</span>
+      </label>
+
+      <button class="submit-btn" onclick="submitEnroll()" id="enrollBtn">
+        <span class="btn-text">Complete Enrollment →</span>
+        <span class="btn-spinner"></span>
+      </button>
+
+      <div class="trust-row">
+        <div class="trust-item"><span>🔒</span> SSL Secured</div>
+        <div class="trust-item"><span>↩️</span> 30-day refund</div>
+        <div class="trust-item"><span>♾️</span> Lifetime access</div>
+      </div>
+    </div>
+
+    <!-- WAITLIST FORM -->
+    <div class="form-body" id="waitlistForm">
+      <p style="font-size:0.88rem; color:rgba(245,242,234,0.5); line-height:1.65; margin-bottom:0.5rem;">
+        Not ready to enroll yet? Join our waitlist and we'll notify you of enrollment windows, special discounts, and free preview lessons.
+      </p>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">First Name</label>
+          <input class="field-input" id="wFirstName" type="text" placeholder="Your first name"/>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Last Name</label>
+          <input class="field-input" id="wLastName" type="text" placeholder="Your last name"/>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Email Address</label>
+        <input class="field-input" id="wEmail" type="email" placeholder="you@example.com"/>
+        <span class="field-error" id="wEmailErr">Please enter a valid email</span>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Which plan interests you?</label>
+        <select class="field-input" id="wPlan">
+          <option value="" disabled selected>Select a plan</option>
+          <option>Starter — $149</option>
+          <option>Full Course — $299</option>
+          <option>Studio Team — $599</option>
+          <option>Not sure yet</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">What's your main goal?</label>
+        <select class="field-input" id="wGoal">
+          <option value="" disabled selected>Select your goal</option>
+          <option>Get a design job</option>
+          <option>Start freelancing</option>
+          <option>Learn AI design tools</option>
+          <option>Build a personal brand</option>
+          <option>Upskill for my current role</option>
+        </select>
+      </div>
+
+      <label class="checkbox-group" onclick="toggleCheck('wAgreeCheck', this)">
+        <input type="checkbox" id="wAgreeCheck"/>
+        <span class="custom-checkbox" id="wAgreeCheckBox"></span>
+        <span class="checkbox-label">I agree to receive emails from Future Stack Academy. You can unsubscribe anytime.</span>
+      </label>
+
+      <button class="submit-btn" onclick="submitWaitlist()" style="background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.15);" id="waitlistBtn">
+        <span class="btn-text">Join the Waitlist →</span>
+        <span class="btn-spinner"></span>
+      </button>
+
+      <div class="waitlist-note">
+        <strong>240+ people</strong> already on the waitlist.<br/>
+        Waitlist members get early access and a 15% discount.
+      </div>
+    </div>
+
+    <!-- SUCCESS SCREEN -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">🎉</div>
+      <div class="success-title" id="successTitle">You're enrolled!</div>
+      <p class="success-desc" id="successDesc">Welcome to Future Stack Academy. Check your email for your login details and next steps to get started.</p>
+      <div class="success-steps">
+        <div class="success-step">
+          <div class="step-num">1</div>
+          <div class="step-text">Check your email for your account confirmation</div>
+        </div>
+        <div class="success-step">
+          <div class="step-num">2</div>
+          <div class="step-text">Log in and access your student dashboard</div>
+        </div>
+        <div class="success-step">
+          <div class="step-num">3</div>
+          <div class="step-text">Start Module 01 — Design Fundamentals</div>
+        </div>
+      </div>
+      <a class="success-btn" href="lessons.html">Browse Your Lessons →</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Plan selection
+  function selectPlan(el, name, price) {
+    document.querySelectorAll('.plan-option').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+    const display = document.getElementById('selectedPlanDisplay');
+    if(display) {
+      display.value = name + ' — ' + price;
+      if(name === 'Full Course') {
+        display.style.borderColor = 'rgba(245,200,66,0.3)';
+        display.style.color = 'var(--gold)';
+        display.style.background = 'rgba(245,200,66,0.06)';
+      } else {
+        display.style.borderColor = 'rgba(255,77,28,0.3)';
+        display.style.color = 'var(--accent)';
+        display.style.background = 'rgba(255,77,28,0.06)';
+      }
+    }
+  }
+
+  // Tab switching
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('enrollForm').classList.remove('active');
+    document.getElementById('waitlistForm').classList.remove('active');
+    document.getElementById('successScreen').classList.remove('show');
+    if(tab === 'enroll') document.getElementById('enrollForm').classList.add('active');
+    else document.getElementById('waitlistForm').classList.add('active');
+  }
+
+  // Password toggle
+  function togglePassword(id, btn) {
+    const input = document.getElementById(id);
+    if(input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+    else { input.type = 'password'; btn.textContent = '👁'; }
+  }
+
+  // Password strength
+  document.getElementById('passwordEnroll').addEventListener('input', function() {
+    const val = this.value;
+    const segs = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3'), document.getElementById('s4')];
+    const label = document.getElementById('strengthLabel');
+    let score = 0;
+    if(val.length >= 8) score++;
+    if(/[A-Z]/.test(val)) score++;
+    if(/[0-9]/.test(val)) score++;
+    if(/[^A-Za-z0-9]/.test(val)) score++;
+    const colors = ['#ef4444','#f97316','#f5c842','#22c55e'];
+    const labels = ['Too short','Weak','Good','Strong'];
+    segs.forEach((s,i) => s.style.background = i < score ? colors[score-1] : 'rgba(255,255,255,0.1)');
+    label.textContent = val.length === 0 ? 'Enter a password' : labels[score-1] || 'Too short';
+    label.style.color = val.length === 0 ? 'rgba(245,242,234,0.35)' : colors[score-1];
+  });
+
+  // Checkbox toggle
+  function toggleCheck(id, label) {
+    const input = document.getElementById(id);
+    const box = document.getElementById(id + 'Box');
+    input.checked = !input.checked;
+    box.textContent = input.checked ? '✓' : '';
+    if(input.checked) { box.style.background = 'var(--accent)'; box.style.borderColor = 'var(--accent)'; box.style.color = 'white'; }
+    else { box.style.background = ''; box.style.borderColor = ''; }
+  }
+
+  // Validation helper
+  function validate(id, errId, check) {
+    const el = document.getElementById(id);
+    const err = document.getElementById(errId);
+    if(!check(el.value)) {
+      el.classList.add('error'); err.classList.add('show'); return false;
+    }
+    el.classList.remove('error'); err.classList.remove('show'); return true;
+  }
+
+  // Submit enroll
+  function submitEnroll() {
+    let valid = true;
+    valid &= validate('firstName','firstNameErr', v => v.trim().length > 0);
+    valid &= validate('lastName','lastNameErr', v => v.trim().length > 0);
+    valid &= validate('emailEnroll','emailEnrollErr', v => /\S+@\S+\.\S+/.test(v));
+    valid &= validate('passwordEnroll','passwordErr', v => v.length >= 8);
+    valid &= validate('experience','experienceErr', v => v !== '');
+    if(!document.getElementById('agreeCheck').checked) {
+      alert('Please agree to the Terms of Service to continue.'); valid = false;
+    }
+    if(!valid) return;
+    const btn = document.getElementById('enrollBtn');
+    btn.classList.add('loading');
+    setTimeout(() => {
+      btn.classList.remove('loading');
+      document.getElementById('enrollForm').classList.remove('active');
+      const s = document.getElementById('successScreen');
+      s.classList.add('show');
+      document.getElementById('successTitle').textContent = 'You\'re enrolled! 🎉';
+      document.getElementById('successDesc').textContent = 'Welcome to Future Stack Academy, ' + document.getElementById('firstName').value + '! Check your email for login details.';
+    }, 2000);
+  }
+
+  // Submit waitlist
+  function submitWaitlist() {
+    const email = document.getElementById('wEmail');
+    const err = document.getElementById('wEmailErr');
+    if(!/\S+@\S+\.\S+/.test(email.value)) {
+      email.classList.add('error'); err.classList.add('show'); return;
+    }
+    email.classList.remove('error'); err.classList.remove('show');
+    if(!document.getElementById('wAgreeCheck').checked) {
+      alert('Please agree to receive emails to join the waitlist.'); return;
+    }
+    const btn = document.getElementById('waitlistBtn');
+    btn.classList.add('loading');
+    setTimeout(() => {
+      btn.classList.remove('loading');
+      document.getElementById('waitlistForm').classList.remove('active');
+      const s = document.getElementById('successScreen');
+      s.classList.add('show');
+      document.getElementById('successTitle').textContent = "You're on the list! ✦";
+      document.getElementById('successDesc').textContent = "Thanks " + (document.getElementById('wFirstName').value || 'there') + "! We'll email you when enrollment opens — plus an exclusive 15% waitlist discount.";
+      document.querySelector('.success-steps').style.display = 'none';
+    }, 1800);
+  }
+
+  // Live input clear on focus
+  document.querySelectorAll('.field-input').forEach(input => {
+    input.addEventListener('focus', function() {
+      this.classList.remove('error');
+      const errId = this.id + 'Err';
+      const err = document.getElementById(errId);
+      if(err) err.classList.remove('show');
+    });
+  });
+</script>
+</body>
+</html>
