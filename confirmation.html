@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>You're In! — Future Stack Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f5f2ea;
+    --accent: #ff4d1c;
+    --electric: #00e5ff;
+    --gold: #f5c842;
+    --muted: #6b6b7a;
+    --border: #e2ddd4;
+    --success: #22c55e;
+    --success-dim: rgba(34,197,94,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.4rem 4rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--paper);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.05rem; letter-spacing: -0.02em;
+    text-decoration: none; color: var(--ink);
+    display: flex; align-items: center; gap: 0.45rem;
+  }
+  .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .nav-right {
+    font-size: 0.83rem; color: var(--muted);
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+
+  /* ── HERO CONFIRMATION ── */
+  .hero-confirm {
+    text-align: center;
+    padding: 5rem 2rem 3rem;
+    position: relative; overflow: hidden;
+  }
+
+  /* confetti particles */
+  .confetti-wrap {
+    position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+  }
+  .confetti-piece {
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 2px;
+    animation: confettiFall linear infinite;
+    opacity: 0;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  .confirm-badge {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: var(--success-dim);
+    border: 1px solid rgba(34,197,94,0.3);
+    color: var(--success); padding: 0.5rem 1.2rem;
+    border-radius: 100px; font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 2rem; animation: fadeDown 0.5s ease both;
+  }
+  .confirm-badge .pulse {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--success);
+    animation: pulse 1.5s ease infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.6; }
+  }
+
+  .confirm-icon-wrap {
+    position: relative; display: inline-block;
+    margin-bottom: 2rem;
+    animation: popIn 0.6s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    animation-delay: 0.1s;
+  }
+  .confirm-icon {
+    width: 110px; height: 110px; border-radius: 50%;
+    background: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; margin: 0 auto;
+    box-shadow: 0 0 0 12px rgba(34,197,94,0.1), 0 0 0 24px rgba(34,197,94,0.05);
+  }
+  .confirm-ring {
+    position: absolute; inset: -16px;
+    border-radius: 50%;
+    border: 2px dashed rgba(34,197,94,0.3);
+    animation: spin 12s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  @keyframes fadeDown {
+    from { transform: translateY(-12px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes fadeUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .confirm-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    letter-spacing: -0.04em; line-height: 1.05;
+    margin-bottom: 1rem;
+    animation: fadeUp 0.6s ease both; animation-delay: 0.25s;
+  }
+  .confirm-title em { font-style: normal; color: var(--accent); }
+
+  .confirm-desc {
+    font-size: 1.05rem; color: var(--muted);
+    line-height: 1.7; max-width: 520px; margin: 0 auto 1.5rem;
+    animation: fadeUp 0.6s ease both; animation-delay: 0.35s;
+  }
+
+  .confirm-email-note {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: rgba(255,77,28,0.07);
+    border: 1px solid rgba(255,77,28,0.15);
+    border-radius: 10px; padding: 0.65rem 1.2rem;
+    font-size: 0.83rem; color: var(--accent); font-weight: 500;
+    margin-bottom: 3rem;
+    animation: fadeUp 0.6s ease both; animation-delay: 0.4s;
+  }
+
+  /* ── ORDER SUMMARY ── */
+  .summary-section {
+    max-width: 680px; margin: 0 auto 3rem;
+    padding: 0 2rem;
+    animation: fadeUp 0.6s ease both; animation-delay: 0.45s;
+  }
+  .summary-card {
+    background: var(--ink); border-radius: 20px;
+    overflow: hidden;
+  }
+  .summary-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .summary-header h3 {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.9rem; color: var(--paper); letter-spacing: -0.01em;
+  }
+  .order-id {
+    font-family: 'Space Mono', monospace; font-size: 0.68rem;
+    color: rgba(245,242,234,0.3); letter-spacing: 0.08em;
+  }
+  .summary-body { padding: 1.5rem 2rem; }
+  .summary-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.875rem;
+  }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-row .label { color: rgba(245,242,234,0.45); }
+  .summary-row .value { color: var(--paper); font-weight: 500; }
+  .summary-row.total .label {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.95rem; color: var(--paper);
+  }
+  .summary-row.total .value {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.4rem; color: var(--gold); letter-spacing: -0.02em;
+  }
+  .plan-chip {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(245,200,66,0.12);
+    border: 1px solid rgba(245,200,66,0.25);
+    color: var(--gold); font-size: 0.75rem; font-weight: 600;
+    padding: 0.3rem 0.8rem; border-radius: 6px;
+  }
+
+  /* ── NEXT STEPS ── */
+  .steps-section {
+    max-width: 680px; margin: 0 auto 3rem;
+    padding: 0 2rem;
+    animation: fadeUp 0.6s ease both; animation-delay: 0.55s;
+  }
+  .steps-label {
+    font-family: 'Space Mono', monospace; font-size: 0.68rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .steps-label::before { content: ''; width: 16px; height: 1px; background: var(--muted); }
+
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .step-card {
+    border: 1px solid var(--border); border-radius: 16px;
+    padding: 1.5rem; position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .step-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+  }
+  .step-number {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--ink); color: var(--paper);
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.85rem;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .step-card.done .step-number { background: var(--success); }
+  .step-card.active-step .step-number { background: var(--accent); }
+  .step-icon { font-size: 1.6rem; margin-bottom: 0.7rem; }
+  .step-title {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--ink);
+  }
+  .step-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+  .step-status {
+    position: absolute; top: 1rem; right: 1rem;
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 4px;
+  }
+  .status-done { background: var(--success-dim); color: var(--success); }
+  .status-now { background: rgba(255,77,28,0.1); color: var(--accent); }
+  .status-soon { background: var(--border); color: var(--muted); }
+
+  /* ── WHAT YOU GET ── */
+  .perks-section {
+    background: var(--ink); color: var(--paper);
+    padding: 4rem 2rem;
+    animation: fadeUp 0.6s ease both; animation-delay: 0.6s;
+  }
+  .perks-inner { max-width: 680px; margin: 0 auto; }
+  .perks-label {
+    font-family: 'Space Mono', monospace; font-size: 0.68rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(245,242,234,0.3); margin-bottom: 0.8rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .perks-label::before { content: ''; width: 16px; height: 1px; background: rgba(245,242,234,0.2); }
+  .perks-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.8rem; letter-spacing: -0.03em;
+    color: var(--paper); margin-bottom: 2rem; line-height: 1.1;
+  }
+  .perks-title em { font-style: normal; color: var(--gold); }
+
+  .perks-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem; margin-bottom: 2.5rem;
+  }
+  .perk-item {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 1.2rem 1.4rem;
+    display: flex; align-items: flex-start; gap: 1rem;
+    transition: background 0.2s;
+  }
+  .perk-item:hover { background: rgba(255,255,255,0.07); }
+  .perk-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+    background: rgba(255,255,255,0.06);
+  }
+  .perk-text h4 {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.875rem; color: var(--paper); margin-bottom: 0.25rem;
+  }
+  .perk-text p { font-size: 0.775rem; color: rgba(245,242,234,0.45); line-height: 1.5; }
+
+  /* ── START BUTTON AREA ── */
+  .cta-section {
+    max-width: 680px; margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+    text-align: center;
+    animation: fadeUp 0.6s ease both; animation-delay: 0.65s;
+  }
+  .cta-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.6rem; letter-spacing: -0.03em;
+    margin-bottom: 0.6rem;
+  }
+  .cta-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+
+  .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--ink); color: var(--paper);
+    padding: 0.95rem 2.2rem; border-radius: 100px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem;
+    text-decoration: none; transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-primary:hover { background: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255,77,28,0.25); }
+  .btn-outline {
+    border: 1.5px solid var(--border); color: var(--muted);
+    padding: 0.95rem 2.2rem; border-radius: 100px;
+    font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.95rem;
+    text-decoration: none; transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--ink); color: var(--ink); }
+
+  /* ── EMAIL PREVIEW CARD ── */
+  .email-preview {
+    max-width: 680px; margin: 0 auto 3rem;
+    padding: 0 2rem;
+    animation: fadeUp 0.6s ease both; animation-delay: 0.5s;
+  }
+  .email-card {
+    border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden;
+  }
+  .email-toolbar {
+    background: #f0ede4; padding: 0.8rem 1.2rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .email-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .ed-r { background: #ff5f57; }
+  .ed-y { background: #febc2e; }
+  .ed-g { background: #28c840; }
+  .email-address {
+    margin-left: auto; font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; color: var(--muted);
+  }
+  .email-body { padding: 2rem; background: white; }
+  .email-header-bar {
+    background: var(--ink); border-radius: 10px;
+    padding: 1.2rem 1.5rem; margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .email-logo-text {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 0.9rem; color: var(--paper);
+  }
+  .email-subject {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 1.1rem; color: var(--ink); margin-bottom: 0.7rem;
+  }
+  .email-p { font-size: 0.83rem; color: var(--muted); line-height: 1.65; margin-bottom: 0.8rem; }
+  .email-btn {
+    display: inline-block; background: var(--accent); color: white;
+    padding: 0.7rem 1.5rem; border-radius: 8px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem;
+    text-decoration: none; margin: 0.5rem 0 1rem;
+  }
+  .email-divider { height: 1px; background: var(--border); margin: 1rem 0; }
+  .email-footer-text { font-size: 0.72rem; color: #aaa; line-height: 1.5; }
+
+  /* ── COUNTDOWN ── */
+  .countdown-bar {
+    background: var(--gold); padding: 0.75rem 2rem;
+    text-align: center;
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .countdown-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--ink); }
+  .countdown-timer {
+    display: flex; gap: 0.5rem; align-items: center;
+  }
+  .timer-seg {
+    background: var(--ink); color: var(--gold);
+    font-family: 'Space Mono', monospace; font-weight: 700; font-size: 0.85rem;
+    padding: 0.2rem 0.5rem; border-radius: 5px; min-width: 32px; text-align: center;
+  }
+  .timer-colon { color: var(--ink); font-weight: 700; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink); color: rgba(245,242,234,0.4);
+    padding: 2rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem; font-size: 0.8rem;
+  }
+  footer .logo { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--paper); }
+  footer a { color: rgba(245,242,234,0.4); text-decoration: none; margin-left: 1.2rem; }
+  footer a:hover { color: var(--electric); }
+
+  @media (max-width: 700px) {
+    nav { padding: 1rem 1.5rem; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .perks-grid { grid-template-columns: 1fr; }
+    .cta-buttons { flex-direction: column; align-items: center; }
+    footer { padding: 2rem 1.5rem; flex-direction: column; text-align: center; }
+    .countdown-bar { padding: 0.75rem 1rem; }
+    .summary-section, .steps-section, .email-preview, .cta-section { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COUNTDOWN BAR -->
+<div class="countdown-bar">
+  <span class="countdown-text">🎓 Your course access unlocks in</span>
+  <div class="countdown-timer">
+    <span class="timer-seg" id="tH">00</span>
+    <span class="timer-colon">:</span>
+    <span class="timer-seg" id="tM">10</span>
+    <span class="timer-colon">:</span>
+    <span class="timer-seg" id="tS">00</span>
+  </div>
+  <span class="countdown-text">— Check your email now!</span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <span class="nav-dot"></span> Future Stack Academy
+  </a>
+  <div class="nav-right">
+    🔒 Secure Confirmation
+  </div>
+</nav>
+
+<!-- CONFETTI -->
+<div class="confetti-wrap" id="confettiWrap"></div>
+
+<!-- HERO -->
+<div class="hero-confirm">
+  <div class="confirm-badge">
+    <span class="pulse"></span> Payment Confirmed
+  </div>
+
+  <div class="confirm-icon-wrap">
+    <div class="confirm-icon">🎉</div>
+    <div class="confirm-ring"></div>
+  </div>
+
+  <h1 class="confirm-title">You're officially<br/><em>a Future Stack student!</em></h1>
+  <p class="confirm-desc">
+    Your enrollment is confirmed and your account is being set up right now.
+    Everything you need to get started has been sent to your email.
+  </p>
+
+  <div class="confirm-email-note">
+    📧 Confirmation sent to <strong id="studentEmail">your email address</strong>
+  </div>
+</div>
+
+<!-- ORDER SUMMARY -->
+<div class="summary-section">
+  <div class="summary-card">
+    <div class="summary-header">
+      <h3>Order Summary</h3>
+      <span class="order-id" id="orderId">Order #FSA-2026-0001</span>
+    </div>
+    <div class="summary-body">
+      <div class="summary-row">
+        <span class="label">Student Name</span>
+        <span class="value" id="studentName">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Plan Selected</span>
+        <span class="value"><span class="plan-chip">⭐ Full Course</span></span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Access</span>
+        <span class="value">Lifetime — all 6 modules</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">AI Tools Covered</span>
+        <span class="value">18 tools included</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Certificate</span>
+        <span class="value">✅ Included on completion</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Enrolled On</span>
+        <span class="value" id="enrollDate">—</span>
+      </div>
+      <div class="summary-row total">
+        <span class="label">Amount Paid</span>
+        <span class="value" id="amountPaid">$299.00</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEXT STEPS -->
+<div class="steps-section">
+  <div class="steps-label">What happens next</div>
+  <div class="steps-grid">
+    <div class="step-card done">
+      <div class="step-status status-done">Done ✓</div>
+      <div class="step-number">1</div>
+      <div class="step-icon">💳</div>
+      <div class="step-title">Payment Confirmed</div>
+      <p class="step-desc">Your payment has been processed successfully and your spot is secured.</p>
+    </div>
+    <div class="step-card active-step">
+      <div class="step-status status-now">Do Now</div>
+      <div class="step-number">2</div>
+      <div class="step-icon">📧</div>
+      <div class="step-title">Check Your Email</div>
+      <p class="step-desc">Open the confirmation email from Future Stack Academy and click the activation link.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-status status-soon">Up Next</div>
+      <div class="step-number">3</div>
+      <div class="step-icon">🚀</div>
+      <div class="step-title">Start Learning</div>
+      <p class="step-desc">Log in to your student dashboard and dive straight into Module 01 — Design Fundamentals.</p>
+    </div>
+  </div>
+</div>
+
+<!-- EMAIL PREVIEW -->
+<div class="email-preview">
+  <div class="steps-label">Here's what your confirmation email looks like</div>
+  <div class="email-card">
+    <div class="email-toolbar">
+      <div class="email-dot ed-r"></div>
+      <div class="email-dot ed-y"></div>
+      <div class="email-dot ed-g"></div>
+      <div class="email-address">From: hello@futurestackacademy.com</div>
+    </div>
+    <div class="email-body">
+      <div class="email-header-bar">
+        <span style="font-size:1.1rem">✦</span>
+        <span class="email-logo-text">Future Stack Academy</span>
+      </div>
+      <div class="email-subject">🎉 Welcome! Your enrollment is confirmed.</div>
+      <p class="email-p">Hi <strong id="emailStudentName">Student</strong>,</p>
+      <p class="email-p">
+        You're officially enrolled in <strong>Future Stack Academy — Full Course</strong>. 
+        We're excited to have you. Your account has been created and you can start 
+        learning right now.
+      </p>
+      <p class="email-p">Click the button below to activate your account and access your lessons:</p>
+      <a class="email-btn" href="lessons.html">Activate My Account →</a>
+      <div class="email-divider"></div>
+      <p class="email-p"><strong>Your enrollment details:</strong></p>
+      <p class="email-p">
+        📦 Plan: Full Course ($299)<br/>
+        ♾️ Access: Lifetime<br/>
+        📅 Start date: <span id="emailDate">—</span><br/>
+        🏆 Certificate: Awarded on completion
+      </p>
+      <div class="email-divider"></div>
+      <p class="email-footer-text">
+        You're receiving this because you enrolled at Future Stack Academy.<br/>
+        © 2026 Future Stack Academy · Founded by Adesina Israel Ayomide (EazeAi)<br/>
+        <a href="#" style="color:#aaa;">Unsubscribe</a> · <a href="#" style="color:#aaa;">Privacy Policy</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- WHAT YOU GET -->
+<div class="perks-section">
+  <div class="perks-inner">
+    <div class="perks-label">Your full course access</div>
+    <div class="perks-title">Everything that's now<br/><em>yours to keep.</em></div>
+    <div class="perks-grid">
+      <div class="perk-item">
+        <div class="perk-icon">🎬</div>
+        <div class="perk-text">
+          <h4>120+ Video Lessons</h4>
+          <p>High-quality lessons across all 6 modules. Stream anytime, on any device.</p>
+        </div>
+      </div>
+      <div class="perk-item">
+        <div class="perk-icon">🤖</div>
+        <div class="perk-text">
+          <h4>18 AI Tool Deep-Dives</h4>
+          <p>Midjourney, Firefly, Figma AI, Canva AI, Stable Diffusion and more.</p>
+        </div>
+      </div>
+      <div class="perk-item">
+        <div class="perk-icon">🛠️</div>
+        <div class="perk-text">
+          <h4>6 Portfolio Projects</h4>
+          <p>One real-world project per module. Graduate with a full professional portfolio.</p>
+        </div>
+      </div>
+      <div class="perk-item">
+        <div class="perk-icon">🏆</div>
+        <div class="perk-text">
+          <h4>Certificate of Completion</h4>
+          <p>Shareable certificate + LinkedIn badge on completing all 6 modules.</p>
+        </div>
+      </div>
+      <div class="perk-item">
+        <div class="perk-icon">🔄</div>
+        <div class="perk-text">
+          <h4>Quarterly AI Updates</h4>
+          <p>AI modules refreshed every quarter. You'll always have the latest tools.</p>
+        </div>
+      </div>
+      <div class="perk-item">
+        <div class="perk-icon">💬</div>
+        <div class="perk-text">
+          <h4>Community Forum</h4>
+          <p>Connect with fellow students, share work, and get feedback from instructors.</p>
+        </div>
+      </div>
+      <div class="perk-item">
+        <div class="perk-icon">📅</div>
+        <div class="perk-text">
+          <h4>Monthly Live Q&A</h4>
+          <p>Join live sessions with instructors to ask questions and get feedback.</p>
+        </div>
+      </div>
+      <div class="perk-item">
+        <div class="perk-icon">♾️</div>
+        <div class="perk-text">
+          <h4>Lifetime Access</h4>
+          <p>No expiry. Come back anytime. Your course is yours forever.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- REFUND NOTE -->
+    <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:1.2rem 1.5rem; display:flex; gap:1rem; align-items:flex-start;">
+      <span style="font-size:1.3rem; flex-shrink:0;">↩️</span>
+      <div>
+        <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:0.88rem; color:var(--paper); margin-bottom:0.3rem;">30-Day Money-Back Guarantee</div>
+        <div style="font-size:0.78rem; color:rgba(245,242,234,0.45); line-height:1.5;">Not satisfied after completing the first two modules? Email us at <a href="mailto:Isrealadesina3@gmail.com" style="color:var(--electric); text-decoration:none;">Isrealadesina3@gmail.com</a> within 30 days for a full refund — no questions asked.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-title">Ready to start? 🚀</div>
+  <p class="cta-desc">Your first lesson is waiting. Module 01 — Design Fundamentals starts with color theory and composition. Let's go.</p>
+  <div class="cta-buttons">
+    <a class="btn-primary" href="lessons.html">Start Module 01 →</a>
+    <a class="btn-outline" href="index.html">Back to Academy Home</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">✦ Future Stack Academy</div>
+  <div>© 2026 Future Stack Academy · Founded by Adesina Israel Ayomide (EazeAi)</div>
+  <div>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="mailto:Isrealadesina3@gmail.com">Support</a>
+  </div>
+</footer>
+
+<script>
+  // ── Set dynamic details ──
+  const params = new URLSearchParams(window.location.search);
+  const name = params.get('name') || 'Student';
+  const email = params.get('email') || 'your email address';
+  const plan = params.get('plan') || 'Full Course';
+  const amount = params.get('amount') || '$299.00';
+
+  document.getElementById('studentName').textContent = name;
+  document.getElementById('studentEmail').textContent = email;
+  document.getElementById('emailStudentName').textContent = name.split(' ')[0] || 'Student';
+  document.getElementById('amountPaid').textContent = amount;
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  document.getElementById('enrollDate').textContent = dateStr;
+  document.getElementById('emailDate').textContent = dateStr;
+
+  // Random order ID
+  const orderId = 'FSA-2026-' + Math.floor(1000 + Math.random() * 9000);
+  document.getElementById('orderId').textContent = 'Order #' + orderId;
+
+  // ── Confetti ──
+  const colors = ['#ff4d1c','#f5c842','#00e5ff','#22c55e','#9b5cf6','#f97316'];
+  const wrap = document.getElementById('confettiWrap');
+  for(let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.cssText = `
+      left: ${Math.random()*100}%;
+      background: ${colors[Math.floor(Math.random()*colors.length)]};
+      width: ${4 + Math.random()*8}px;
+      height: ${4 + Math.random()*8}px;
+      border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+      animation-duration: ${3 + Math.random()*5}s;
+      animation-delay: ${Math.random()*4}s;
+    `;
+    wrap.appendChild(p);
+  }
+
+  // ── Countdown timer (10 mins) ──
+  let total = 10 * 60;
+  function updateTimer() {
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    document.getElementById('tH').textContent = String(h).padStart(2,'0');
+    document.getElementById('tM').textContent = String(m).padStart(2,'0');
+    document.getElementById('tS').textContent = String(s).padStart(2,'0');
+    if(total > 0) total--;
+  }
+  updateTimer();
+  setInterval(updateTimer, 1000);
+</script>
+</body>
+</html>
